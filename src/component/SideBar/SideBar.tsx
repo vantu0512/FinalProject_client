@@ -1,17 +1,22 @@
 import {
-	ShoppingCartOutlined,
-	FileOutlined,
 	HomeOutlined,
+	ShoppingCartOutlined,
+	FundOutlined,
 	UserOutlined,
+	SolutionOutlined,
 	LogoutOutlined,
+	ProfileOutlined,
+	TeamOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { userAction } from "../../store/action/userAction";
+import { commonAction } from "../../store/action/commonAction";
 
-function getItem(label: any, key: any, icon?: any, children?: any) {
+function getItem(label: string, key: string, icon?: any, children?: any) {
 	return {
 		key,
 		icon,
@@ -20,34 +25,91 @@ function getItem(label: any, key: any, icon?: any, children?: any) {
 	};
 }
 const items: any = [
-	getItem("Trang chủ", "1", <HomeOutlined />),
-	getItem("Giỏ hàng", "2", <ShoppingCartOutlined />),
-	getItem("Tài khoản", "sub1", <UserOutlined />, [
-		getItem("Information", "3"),
-		getItem("Change password", "4"),
-		getItem("History", "5"),
-	]),
-	getItem("Thống kê", "9", <FileOutlined />),
+	getItem("Trang chủ", "0", <HomeOutlined />),
+	getItem("Thống kê", "1", <FundOutlined />),
+	getItem("Quản lý đơn đặt hàng", "2", <ShoppingCartOutlined />),
+	getItem("Quản lý nhân viên", "3", <UserOutlined />),
+	getItem("Quản lý khách hàng", "4", <TeamOutlined />),
+	getItem("Quản lý nhà cung cấp", "5", <SolutionOutlined />),
+	getItem("Quản lý sản phẩm", "6", <ProfileOutlined />),
+	getItem("Quản lý khuyễn mãi", "7", <ProfileOutlined />),
+];
+
+type ArrTabsType = {
+	key: number;
+	tabName: string;
+	url: string;
+};
+
+const arrTabs: ArrTabsType[] = [
+	{
+		key: 0,
+		tabName: "Trang chủ",
+		url: "/",
+	},
+	{
+		key: 1,
+		tabName: "Thống kê",
+		url: "/statistical",
+	},
+	{
+		key: 2,
+		tabName: "Quản lý đơn đặt hàng",
+		url: "/manage-order",
+	},
+	{
+		key: 3,
+		tabName: "Quản lý nhân viên",
+		url: "/manage-staff",
+	},
+	{
+		key: 4,
+		tabName: "Quản lý khách hàng",
+		url: "/manage-client",
+	},
+	{
+		key: 5,
+		tabName: "Quản lý nhà cung cấp",
+		url: "/manage-supplier",
+	},
+	{
+		key: 6,
+		tabName: "Quản lý sản phẩm",
+		url: "/manage-product",
+	},
+
+	{
+		key: 7,
+		tabName: "Quản lý khuyến mãi",
+		url: "/manage-promotion",
+	},
 ];
 
 export const SideBar = () => {
 	const navigate = useNavigate();
+	const location = useLocation();
 	const dispatch: AppDispatch = useDispatch();
 	const email = useSelector((state: RootState) => state.userReducer.email);
 
+	const selectedKey = useMemo(() => {
+		const item = arrTabs.find((item) => {
+			return item.url === location.pathname;
+		});
+		dispatch(
+			commonAction.changeTab({
+				key: item?.key,
+				name: item?.tabName,
+			}),
+		);
+		return item?.key ?? 0;
+	}, [location.pathname]);
+
 	const handleNavigate = (key: any) => {
-		switch (Number(key)) {
-			case 1: {
-				navigate("/home");
-				break;
+		arrTabs.forEach((item) => {
+			if (Number(key) === item.key) {
+				navigate(item.url);
 			}
-			case 2: {
-				navigate("/manage-product");
-				break;
-			}
-			default:
-				break;
-		}
+		});
 	};
 
 	const handleSignOut = async () => {
@@ -68,13 +130,12 @@ export const SideBar = () => {
 			</div>
 			<Menu
 				theme="dark"
-				defaultSelectedKeys={["1"]}
 				mode="inline"
 				items={items}
 				onClick={(value) => {
-					console.log("check: ", value);
 					handleNavigate(value?.key);
 				}}
+				selectedKeys={[selectedKey.toString()]}
 			/>
 			<div className="sidebar_login-logout">
 				<div className="user-infor">
@@ -84,8 +145,8 @@ export const SideBar = () => {
 						className="avatar"
 					/>
 					<div className="infor">
+						<label>Admin</label>
 						<label>{email}</label>
-						<label>Email@gmail.com</label>
 					</div>
 				</div>
 				<div className="logout-icon">

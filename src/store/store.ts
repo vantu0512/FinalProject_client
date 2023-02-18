@@ -5,9 +5,9 @@ import storage from "redux-persist/lib/storage";
 import { rootReducer } from "./reducer/rootReducer";
 
 const persistConfig = {
-  key: "user",
-  storage,
-  whitelist: ["userReducer", "cartReducer"],
+	key: "user",
+	storage,
+	whitelist: ["userReducer", "cartReducer", "commonReducer"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -17,8 +17,8 @@ const store = createStore(persistedReducer, applyMiddleware(thunk));
 const persistor = persistStore(store);
 
 export const configureStore = {
-  store,
-  persistor,
+	store,
+	persistor,
 };
 
 export type RootState = ReturnType<typeof configureStore.store.getState>;
