@@ -7,9 +7,9 @@ export type UserReducer = {
 };
 
 const initialState: UserReducer = {
-	email: "condb@gmail.com",
-	accessToken: "accessToken",
-	role: "admin",
+	email: "",
+	accessToken: "",
+	role: "",
 };
 
 export const userReducer = (state: UserReducer = initialState, action: any) => {
@@ -19,6 +19,7 @@ export const userReducer = (state: UserReducer = initialState, action: any) => {
 				...state,
 				email: action.payload.email,
 				accessToken: action.payload.accessToken,
+				role: action.payload.role,
 			};
 		case actionType.LOG_OUT:
 			return {

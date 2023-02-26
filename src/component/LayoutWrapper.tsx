@@ -4,12 +4,13 @@ import { Header } from "./Header/Header";
 import { Content } from "./Content/Content";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import { useSelector } from "react-redux";
-// import { RootState } from "../store/store";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 const LayoutWrapper = () => {
-	const userAccessToken = "hello world";
-	// useSelector((state: RootState) => state.userReducer.accessToken);
+	const userAccessToken = useSelector(
+		(state: RootState) => state.userReducer.accessToken,
+	);
 	return (
 		<>
 			<Layout
