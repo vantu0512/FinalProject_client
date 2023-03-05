@@ -28,7 +28,7 @@ export const userReducer = (state: UserReducer = initialState, action: any) => {
 				accessToken: action.payload.accessToken,
 				role: action.payload.role,
 			};
-		case actionType.LOG_OUT:
+		case actionType.SIGN_OUT:
 			return {
 				...state,
 				email: "",

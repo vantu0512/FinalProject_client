@@ -1,5 +1,5 @@
 import {
-	HomeOutlined,
+	// HomeOutlined,
 	ShoppingCartOutlined,
 	FundOutlined,
 	UserOutlined,
@@ -25,14 +25,15 @@ function getItem(label: string, key: string, icon?: any, children?: any) {
 	};
 }
 const items: any = [
-	getItem("Trang chủ", "0", <HomeOutlined />),
+	// getItem("Trang chủ", "0", <HomeOutlined />),
 	getItem("Thống kê", "1", <FundOutlined />),
-	getItem("Quản lý đơn đặt hàng", "2", <ShoppingCartOutlined />),
-	getItem("Quản lý nhân viên", "3", <UserOutlined />),
-	getItem("Quản lý khách hàng", "4", <TeamOutlined />),
-	getItem("Quản lý nhà cung cấp", "5", <SolutionOutlined />),
-	getItem("Quản lý sản phẩm", "6", <ProfileOutlined />),
-	getItem("Quản lý khuyễn mãi", "7", <ProfileOutlined />),
+	getItem("Quản lý đơn hàng", "2", <ShoppingCartOutlined />),
+	getItem("Quản lý tài khoản", "3", <UserOutlined />),
+	getItem("Quản lý quyền truy cập", "4", <TeamOutlined />),
+	getItem("Quản lý sản phẩm", "5", <SolutionOutlined />),
+	getItem("Quản lý danh mục sản phẩm", "6", <ProfileOutlined />),
+	getItem("Quản lý tin tức", "7", <ProfileOutlined />),
+	getItem("Quản lý trang", "7", <ProfileOutlined />),
 ];
 
 type ArrTabsType = {

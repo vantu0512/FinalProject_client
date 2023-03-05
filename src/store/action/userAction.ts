@@ -29,7 +29,7 @@ const signIn = (userInfor: UserType) => {
 const signOut = () => {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
 		dispatch({
-			type: actionType.LOG_OUT,
+			type: actionType.SIGN_OUT,
 		});
 	};
 };

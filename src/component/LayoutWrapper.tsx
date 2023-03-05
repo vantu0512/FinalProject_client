@@ -11,6 +11,8 @@ const LayoutWrapper = () => {
 	const userAccessToken = useSelector(
 		(state: RootState) => state.userReducer.accessToken,
 	);
+
+	const role = useSelector((state: RootState) => state.userReducer.role);
 	return (
 		<>
 			<Layout
@@ -20,9 +22,9 @@ const LayoutWrapper = () => {
 				className="layoutWrapperComponent"
 			>
 				<ToastContainer />
-				{userAccessToken && <SideBar />}
+				{userAccessToken && role === "admin" && <SideBar />}
 				<Layout className="site-layout">
-					{userAccessToken && <Header />}
+					{userAccessToken && role === "admin" && <Header />}
 					<Content />
 				</Layout>
 			</Layout>

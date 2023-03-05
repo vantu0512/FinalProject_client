@@ -18,7 +18,7 @@ const AdminRoleWrapper = () => {
 	if (role === "admin") {
 		return <Outlet />;
 	}
-	return <Navigate to={"/403Component"} replace />;
+	return <Navigate to={"/component403"} replace />;
 };
 
 export const Router = () => {
