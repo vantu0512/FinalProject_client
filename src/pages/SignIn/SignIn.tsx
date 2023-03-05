@@ -6,7 +6,6 @@ import loginIcon from "../../asset/image/login.png";
 import React, { useEffect } from "react";
 import { AppDispatch, RootState } from "../../store/store";
 import { userAction } from "../../store/action/userAction";
-import { toast } from "react-toastify";
 
 export const SignIn = (): React.ReactElement => {
 	const [loginForm] = Form.useForm();
@@ -20,16 +19,14 @@ export const SignIn = (): React.ReactElement => {
 		userAccessToken && navigate("/");
 	}, [userAccessToken]);
 
-	const onFinish = async (values: any) => {
+	const onFinish = async (values: { email: string; password: string }) => {
 		try {
-			console.log("ok: ", values);
-			dispatch(
+			await dispatch(
 				userAction.signIn({
-					email: "email@gmail.com",
-					password: "password",
+					email: values.email,
+					password: values.password,
 				}),
 			);
-			toast.success("Welcome admin!");
 		} catch (e) {
 			console.log(e);
 		}
@@ -76,12 +73,12 @@ export const SignIn = (): React.ReactElement => {
 						form={loginForm}
 					>
 						<Form.Item
-							label="Username"
-							name="userName"
+							label="Email"
+							name="email"
 							rules={[
 								{
 									required: true,
-									message: "Please input your username!",
+									message: "Please input your email!",
 								},
 							]}
 						>

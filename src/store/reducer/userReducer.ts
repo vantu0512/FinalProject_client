@@ -14,7 +14,14 @@ const initialState: UserReducer = {
 
 export const userReducer = (state: UserReducer = initialState, action: any) => {
 	switch (action.type) {
-		case actionType.LOGIN_SUCCESS:
+		case actionType.SIGN_UP_SUCCESS:
+			return {
+				...state,
+				email: action.payload.email,
+				accessToken: action.payload.accessToken,
+				role: action.payload.role,
+			};
+		case actionType.SIGN_IN_SUCCESS:
 			return {
 				...state,
 				email: action.payload.email,
