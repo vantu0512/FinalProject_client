@@ -15,8 +15,11 @@ export const SignIn = (): React.ReactElement => {
 	const userAccessToken = useSelector(
 		(state: RootState) => state.userReducer.accessToken,
 	);
+	const role = useSelector((state: RootState) => state.userReducer.role);
+
 	useEffect(() => {
-		userAccessToken && navigate("/");
+		userAccessToken && role === "user" && navigate("/");
+		userAccessToken && role === "admin" && navigate("/statistical");
 	}, [userAccessToken]);
 
 	const onFinish = async (values: { email: string; password: string }) => {

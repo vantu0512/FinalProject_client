@@ -1,0 +1,12 @@
+.layout-user{
+    .ant-layout-header{
+        padding: 0;
+        .ant-menu{
+            .ant-menu-item:last-child{
+                margin-left: 300px ;
+                color: red;
+            }
+        }
+        
+    }
+}

@@ -1,14 +1,14 @@
-import { Button, Card, Carousel } from "antd";
+import { Card, Carousel } from "antd";
 import Meta from "antd/es/card/Meta";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+// import { useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
 import img from "../../asset/image/library.png";
-import { RootState } from "../../store/store";
+// import { RootState } from "../../store/store";
 export const Home = (): React.ReactElement => {
-	const navigate = useNavigate();
-	const userAccessToken = useSelector(
-		(state: RootState) => state.userReducer.accessToken,
-	);
+	// const navigate = useNavigate();
+	// const userAccessToken = useSelector(
+	// 	(state: RootState) => state.userReducer.accessToken,
+	// );
 	const contentStyle: React.CSSProperties = {
 		height: 400,
 		color: "#fff",
@@ -24,26 +24,6 @@ export const Home = (): React.ReactElement => {
 					height: "100%",
 				}}
 			>
-				{!userAccessToken && (
-					<div
-						style={{
-							width: "100%",
-							height: 60,
-							backgroundColor: "#364d79",
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "right",
-							padding: "0px 40px",
-						}}
-					>
-						<Button
-							type="primary"
-							onClick={() => navigate("/sign-in")}
-						>
-							Đăng nhập
-						</Button>
-					</div>
-				)}
 				<Carousel autoplay>
 					<div>
 						<h3 style={contentStyle}>
