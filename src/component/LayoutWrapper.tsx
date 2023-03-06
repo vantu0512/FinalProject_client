@@ -99,7 +99,7 @@ const LayoutWrapper = () => {
 					<span>{userAccessToken ? "Đăng xuất" : "Đăng nhập"}</span>
 				</div>
 			),
-			url: userAccessToken ? "/" : "/sign-in",
+			url: "/sign-in",
 		},
 	];
 
@@ -108,7 +108,7 @@ const LayoutWrapper = () => {
 			if (key == item.key) {
 				if (item.key == 6) {
 					if (userAccessToken) dispatch(userAction.signOut());
-					else navigate(item.url);
+					navigate(item.url);
 				} else return navigate(item.url);
 			}
 		});
@@ -133,19 +133,28 @@ const LayoutWrapper = () => {
 			) : (
 				<>
 					<Layout className="layout layout-user">
-						<Layout.Header style={{ padding: "0 40px" }}>
-							<div className="logo" />
-							<Menu
-								theme="dark"
-								mode="horizontal"
-								defaultSelectedKeys={["1"]}
-								items={menu.map((item) => item)}
-								onClick={(value: any) =>
-									handleNavigate(value.key)
-								}
-							/>
-						</Layout.Header>
-						<Layout.Content style={{ padding: "0 40px" }}>
+						{userAccessToken && role === "user" && (
+							<Layout.Header style={{ padding: "0 40px" }}>
+								<div className="logo" />
+								<Menu
+									theme="light"
+									mode="horizontal"
+									defaultSelectedKeys={["1"]}
+									items={menu.map((item) => item)}
+									onClick={(value: any) =>
+										handleNavigate(value.key)
+									}
+								/>
+							</Layout.Header>
+						)}
+						<Layout.Content
+							style={{
+								padding:
+									userAccessToken && role === "user"
+										? "0 40px"
+										: "0px",
+							}}
+						>
 							<div
 								className="site-layout-content"
 								style={{ background: colorBgContainer }}
@@ -153,11 +162,13 @@ const LayoutWrapper = () => {
 								<Router />
 							</div>
 						</Layout.Content>
-						<Layout.Footer
-							style={{ textAlign: "center", color: "red" }}
-						>
-							Foot ware ©2023 Created by Vantu0512
-						</Layout.Footer>
+						{userAccessToken && role === "user" && (
+							<Layout.Footer
+								style={{ textAlign: "center", color: "red" }}
+							>
+								Foot ware ©2023 Created by Vantu0512
+							</Layout.Footer>
+						)}
 					</Layout>
 				</>
 			)}

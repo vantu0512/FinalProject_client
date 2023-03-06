@@ -22,6 +22,7 @@ export const Home = (): React.ReactElement => {
 				style={{
 					width: "100%",
 					height: "100%",
+					marginTop: 8,
 				}}
 			>
 				<Carousel autoplay>
@@ -94,7 +95,7 @@ export const Home = (): React.ReactElement => {
 				<div
 					style={{
 						display: "flex",
-						marginTop: 12,
+						marginTop: 40,
 						justifyContent: "center",
 						alignItems: "center",
 					}}
