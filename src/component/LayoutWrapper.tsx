@@ -153,6 +153,7 @@ const LayoutWrapper = () => {
 									userAccessToken && role === "user"
 										? "0 40px"
 										: "0px",
+								backgroundColor: "#FFFFFF",
 							}}
 						>
 							<div

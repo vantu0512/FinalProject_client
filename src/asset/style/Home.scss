@@ -1,0 +1,22 @@
+.home{
+    width: 100%;
+    height: 100%;
+    margin-top: 8px;
+    .banner{
+
+    }
+    .trending{
+        width: 100%;
+        .trending-title{
+            font-size: 24px;
+            margin: 24px 0px;
+        }
+        .trending-item{
+            margin: 4px;
+            border-radius: unset;
+            img{
+                border-radius: unset;
+            }
+        }
+    }
+}
