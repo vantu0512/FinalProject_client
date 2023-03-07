@@ -38,6 +38,7 @@ const LayoutWrapper = () => {
 		key: number;
 		label: React.ReactElement;
 		url: string;
+		children?: any;
 	};
 
 	const menu: Menu[] = [
@@ -90,6 +91,20 @@ const LayoutWrapper = () => {
 				</div>
 			),
 			url: "/account",
+			children: [
+				{
+					label: "Thông tin cá nhân",
+					key: "personal",
+				},
+				{
+					label: "Ảnh đại diện",
+					key: "avatar",
+				},
+				{
+					label: "Đổi mật khẩu",
+					key: "change-password",
+				},
+			],
 		},
 		{
 			key: 6,
