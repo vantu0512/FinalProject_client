@@ -26,8 +26,9 @@ const signIn = (userInfor: UserType) => {
 	};
 };
 
-const signOut = () => {
+const signOut = (userInfor: UserType) => {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
+		await userApi.signOut(userInfor);
 		dispatch({
 			type: actionType.SIGN_OUT,
 		});

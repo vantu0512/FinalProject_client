@@ -91,6 +91,9 @@ export const SideBar = () => {
 	const location = useLocation();
 	const dispatch: AppDispatch = useDispatch();
 	const email = useSelector((state: RootState) => state.userReducer.email);
+	const userAccessToken = useSelector(
+		(state: RootState) => state.userReducer.accessToken,
+	);
 
 	const selectedKey = useMemo(() => {
 		const item = arrTabs.find((item) => {
@@ -115,7 +118,12 @@ export const SideBar = () => {
 
 	const handleSignOut = async () => {
 		try {
-			await dispatch(userAction.signOut());
+			await dispatch(
+				userAction.signOut({
+					email,
+					accessToken: userAccessToken,
+				}),
+			);
 		} catch (e) {
 			console.log(e);
 		}

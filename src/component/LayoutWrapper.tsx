@@ -18,17 +18,22 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Router } from "../router/router";
 import { userAction } from "../store/action/userAction";
 
 const LayoutWrapper = () => {
 	const navigate = useNavigate();
 	const dispatch: AppDispatch = useDispatch();
+	const location = useLocation();
+	const currentPath = location.pathname.split("/")[1];
+	const role = useSelector((state: RootState) => state.userReducer.role);
+	const email = useSelector((state: RootState) => state.userReducer.email);
 	const userAccessToken = useSelector(
 		(state: RootState) => state.userReducer.accessToken,
 	);
-	const role = useSelector((state: RootState) => state.userReducer.role);
+
+	console.log("check: ", currentPath);
 
 	const {
 		token: { colorBgContainer },
@@ -122,7 +127,13 @@ const LayoutWrapper = () => {
 		menu.forEach((item) => {
 			if (key == item.key) {
 				if (item.key == 6) {
-					if (userAccessToken) dispatch(userAction.signOut());
+					if (userAccessToken)
+						dispatch(
+							userAction.signOut({
+								email,
+								accessToken: userAccessToken,
+							}),
+						);
 					navigate(item.url);
 				} else return navigate(item.url);
 			}
@@ -148,20 +159,21 @@ const LayoutWrapper = () => {
 			) : (
 				<>
 					<Layout className="layout layout-user">
-						{userAccessToken && role === "user" && (
-							<Layout.Header style={{ padding: "0 40px" }}>
-								<div className="logo" />
-								<Menu
-									theme="light"
-									mode="horizontal"
-									defaultSelectedKeys={["1"]}
-									items={menu.map((item) => item)}
-									onClick={(value: any) =>
-										handleNavigate(value.key)
-									}
-								/>
-							</Layout.Header>
-						)}
+						{currentPath !== "sign-in" &&
+							currentPath !== "sign-up" && (
+								<Layout.Header style={{ padding: "0 40px" }}>
+									<div className="logo" />
+									<Menu
+										theme="light"
+										mode="horizontal"
+										defaultSelectedKeys={["1"]}
+										items={menu.map((item) => item)}
+										onClick={(value: any) =>
+											handleNavigate(value.key)
+										}
+									/>
+								</Layout.Header>
+							)}
 						<Layout.Content
 							style={{
 								padding:
@@ -178,13 +190,17 @@ const LayoutWrapper = () => {
 								<Router />
 							</div>
 						</Layout.Content>
-						{userAccessToken && role === "user" && (
-							<Layout.Footer
-								style={{ textAlign: "center", color: "red" }}
-							>
-								Foot ware ©2023 Created by Vantu0512
-							</Layout.Footer>
-						)}
+						{currentPath !== "sign-in" &&
+							currentPath !== "sign-up" && (
+								<Layout.Footer
+									style={{
+										textAlign: "center",
+										color: "red",
+									}}
+								>
+									Foot ware ©2023 Created by Vantu0512
+								</Layout.Footer>
+							)}
 					</Layout>
 				</>
 			)}

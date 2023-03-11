@@ -13,6 +13,7 @@ export type UserType = {
 	gender?: string;
 	age?: string;
 	role?: string;
+	accessToken?: string;
 };
 
 export type ProductType = {
