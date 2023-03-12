@@ -1,4 +1,5 @@
 import { Component403 } from "../component/Component403/Component403";
+import { Category } from "../pages/Category/Category";
 import { Home } from "../pages/Home/Home";
 import { ManageClient } from "../pages/ManageClient/ManageClient";
 import { ManageOrder } from "../pages/ManageOrder/ManageOrder";
@@ -44,8 +45,8 @@ export const adminRoute = [
 
 export const userRoute = [
 	{
-		url: "/user",
-		element: <>user route</>,
+		url: "/category",
+		element: <Category />,
 	},
 ];
 

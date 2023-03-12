@@ -50,7 +50,7 @@ export const ManageOrder = (): React.ReactElement => {
 			title: "Mã đơn hàng",
 			dataIndex: "orderId",
 			key: "orderId",
-			render: (text, record) => (
+			render: (text) => (
 				<div className="ms__table--name">
 					<span>{text}</span>
 				</div>
@@ -95,7 +95,7 @@ export const ManageOrder = (): React.ReactElement => {
 		{
 			title: "Hành động",
 			key: "action",
-			render: (item, record) => (
+			render: (item) => (
 				<Space size="middle">
 					<Tooltip title="Sửa">
 						<EditOutlined

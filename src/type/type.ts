@@ -8,12 +8,23 @@ export type CartType = {
 };
 
 export type UserType = {
-	email: string;
+	email?: string;
 	password?: string;
 	gender?: string;
 	age?: string;
 	role?: string;
 	accessToken?: string;
+	refreshToken?: string;
+};
+
+export type TokenType = {
+	accessToken: string;
+	refreshToken: string;
+};
+
+export type CategoryType = {
+	categoryId: string;
+	name: string;
 };
 
 export type ProductType = {

@@ -14,26 +14,20 @@ import {
 import { SideBar } from "./SideBar/SideBar";
 import { Header } from "./Header/Header";
 import { Content } from "./Content/Content";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/store";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Router } from "../router/router";
-import { userAction } from "../store/action/userAction";
+import { userApi } from "../api/userApi";
 
 const LayoutWrapper = () => {
 	const navigate = useNavigate();
-	const dispatch: AppDispatch = useDispatch();
 	const location = useLocation();
 	const currentPath = location.pathname.split("/")[1];
-	const role = useSelector((state: RootState) => state.userReducer.role);
-	const email = useSelector((state: RootState) => state.userReducer.email);
-	const userAccessToken = useSelector(
-		(state: RootState) => state.userReducer.accessToken,
-	);
-
-	console.log("check: ", currentPath);
+	const user = JSON.parse(localStorage.getItem("user") || "{}");
+	const role = user.role;
+	const userAccessToken = user.accessToken;
+	const userRefreshToken = user.refreshToken;
 
 	const {
 		token: { colorBgContainer },
@@ -124,17 +118,20 @@ const LayoutWrapper = () => {
 	];
 
 	const handleNavigate = (key: number) => {
-		menu.forEach((item) => {
+		menu.forEach(async (item) => {
 			if (key == item.key) {
 				if (item.key == 6) {
-					if (userAccessToken)
-						dispatch(
-							userAction.signOut({
-								email,
-								accessToken: userAccessToken,
-							}),
-						);
-					navigate(item.url);
+					if (userAccessToken) {
+						try {
+							const res = await userApi.signOut({
+								refreshToken: userRefreshToken,
+							});
+							if (res) localStorage.removeItem("user");
+						} catch (e: any) {
+							console.log(e);
+							toast.error(e.message);
+						}
+					} else navigate(item.url);
 				} else return navigate(item.url);
 			}
 		});

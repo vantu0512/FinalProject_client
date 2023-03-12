@@ -7,7 +7,7 @@ import { rootReducer } from "./reducer/rootReducer";
 const persistConfig = {
 	key: "user",
 	storage,
-	whitelist: ["userReducer", "cartReducer", "commonReducer"],
+	whitelist: ["cartReducer", "commonReducer"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -21,5 +21,5 @@ export const configureStore = {
 	persistor,
 };
 
-export type RootState = ReturnType<typeof configureStore.store.getState>;
-export type AppDispatch = ReturnType<typeof configureStore.store.dispatch>;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = ReturnType<typeof store.dispatch>;

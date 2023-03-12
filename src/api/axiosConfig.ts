@@ -1,23 +1,45 @@
 import axios from "axios";
-import { toast } from "react-toastify";
-import { configureStore } from "../store/store";
 
-const axiosConfig = axios.create({ baseURL: "http://localhost:8080" });
+const controller = new AbortController();
+const CancelToken = axios.CancelToken;
+const source = CancelToken.source();
+
+const AuthService = {
+	getUserInfo: () => {
+		return JSON.parse(localStorage.getItem("user") || "{}");
+	},
+	getAccessToken: () => {
+		const user = JSON.parse(localStorage.getItem("user") || "{}");
+		return user?.accessToken;
+	},
+	getRefreshToken: () => {
+		const user = JSON.parse(localStorage.getItem("user") || "{}");
+		return user?.refreshToken;
+	},
+};
+
+const axiosConfig = axios.create({
+	baseURL: process.env.REACT_APP_SERVER_URL,
+	timeout: 30000,
+	cancelToken: source.token,
+	signal: controller.signal,
+});
 
 // Add a request interceptor
 axiosConfig.interceptors.request.use(
 	(config: any) => {
-		const userAccessToken =
-			configureStore.store.getState().userReducer.accessToken;
+		const userAccessToken = AuthService.getAccessToken();
+		console.log(userAccessToken);
 
-		if (userAccessToken) {
+		if (userAccessToken && config.headers) {
 			config.headers["Authorization"] = `Bearer ${userAccessToken}`;
 		}
-
+		if (config.headers) {
+			config.headers["Content-Type"] = "application/json";
+		}
 		return config;
 	},
 	(error) => {
-		toast(error, { type: "error" });
 		return Promise.reject(error);
 	},
 );
@@ -25,25 +47,43 @@ axiosConfig.interceptors.request.use(
 // Add a response interceptor
 axiosConfig.interceptors.response.use(
 	(response) => {
-		// Any status code that lie within the range of 2xx cause this function to trigger
-		// Do something with response data
-
-		if (response.data?.errCode === 1) {
-			toast(response.data.errMessage, { type: "error" });
-		}
-
 		return response;
 	},
-	(error) => {
+	async (error) => {
 		// Any status codes that falls outside the range of 2xx cause this function to trigger
 		// Do something with response error
-
-		const message =
-			error?.response?.data?.errMessage ||
-			error?.message ||
-			"Request error";
-		toast(message, { type: "error" });
-		return Promise.reject(error);
+		if (!window.navigator.onLine) {
+			window.location.reload();
+			return;
+		}
+		if (error?.response?.status === 403) {
+			controller.abort();
+			try {
+				const response = await axios.post(
+					"/refresh-token",
+					{
+						refreshToken: AuthService.getRefreshToken(),
+					},
+					{
+						headers: {
+							Authorization:
+								"Bearer " + AuthService.getAccessToken(),
+						},
+						baseURL: process.env.REACT_APP_SERVER_URL,
+						timeout: 30000,
+					},
+				);
+				localStorage.removeItem("user");
+				localStorage.setItem(
+					"user",
+					JSON.stringify(response.data.data),
+				);
+				window.location.reload();
+			} catch (error) {
+				window.localStorage.removeItem("user");
+				window.location.replace("/");
+			}
+		} else return Promise.reject(error);
 	},
 );
 

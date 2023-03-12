@@ -28,10 +28,7 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
 	const [images, setImages] = useState([]);
 	const maxNumber = 69;
 
-	const onChange = (
-		imageList: ImageListType,
-		addUpdateIndex: number[] | undefined,
-	) => {
+	const onChange = (imageList: ImageListType) => {
 		onChangePickAvatar && onChangePickAvatar(imageList[0]);
 		// data for submit
 		// console.log(imageList, addUpdateIndex);
@@ -86,13 +83,7 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
 			onChange={onChange}
 			maxNumber={maxNumber}
 		>
-			{({
-				imageList,
-				onImageUpload,
-				onImageRemove,
-				isDragging,
-				dragProps,
-			}) => (
+			{({ imageList, onImageUpload, onImageRemove, dragProps }) => (
 				// write your building UI
 				<div className={`avtp__wrapper ${className}`}>
 					<div

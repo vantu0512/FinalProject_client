@@ -44,7 +44,7 @@ export const ManageSupplier = (): React.ReactElement => {
 			title: "Mã nhà cung cấp",
 			dataIndex: "supplierId",
 			key: "orderId",
-			render: (text, record) => (
+			render: (text) => (
 				<div className="ms__table--name">
 					<span>{text}</span>
 				</div>
@@ -74,7 +74,7 @@ export const ManageSupplier = (): React.ReactElement => {
 		{
 			title: "Hành động",
 			key: "action",
-			render: (item, record) => (
+			render: (item) => (
 				<Space size="middle">
 					<Tooltip title="Sửa">
 						<EditOutlined

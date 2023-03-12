@@ -11,10 +11,11 @@ import {
 import { Layout, Menu } from "antd";
 import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AppDispatch, RootState } from "../../store/store";
-import { useDispatch, useSelector } from "react-redux";
-import { userAction } from "../../store/action/userAction";
+import { AppDispatch } from "../../store/store";
+import { useDispatch } from "react-redux";
 import { commonAction } from "../../store/action/commonAction";
+import { userApi } from "../../api/userApi";
+import { toast } from "react-toastify";
 
 function getItem(label: string, key: string, icon?: any, children?: any) {
 	return {
@@ -90,11 +91,9 @@ export const SideBar = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const dispatch: AppDispatch = useDispatch();
-	const email = useSelector((state: RootState) => state.userReducer.email);
-	const userAccessToken = useSelector(
-		(state: RootState) => state.userReducer.accessToken,
-	);
-
+	const user = JSON.parse(localStorage.getItem("user") || "{}");
+	const email = user.email;
+	const userRefreshToken = user.refreshToken;
 	const selectedKey = useMemo(() => {
 		const item = arrTabs.find((item) => {
 			return item.url === location.pathname;
@@ -118,14 +117,16 @@ export const SideBar = () => {
 
 	const handleSignOut = async () => {
 		try {
-			await dispatch(
-				userAction.signOut({
-					email,
-					accessToken: userAccessToken,
-				}),
-			);
-		} catch (e) {
+			const res = await userApi.signOut({
+				refreshToken: userRefreshToken,
+			});
+			if (res) {
+				localStorage.removeItem("user");
+				navigate("/");
+			}
+		} catch (e: any) {
 			console.log(e);
+			toast.error(e.message);
 		}
 	};
 

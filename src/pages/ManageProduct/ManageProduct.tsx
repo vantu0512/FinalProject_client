@@ -101,7 +101,7 @@ export const ManageProduct: React.FC = () => {
 		{
 			title: "Hành động",
 			key: "action",
-			render: (item, record) => (
+			render: (item) => (
 				<Space size="middle">
 					<Tooltip title="Sửa">
 						<EditOutlined

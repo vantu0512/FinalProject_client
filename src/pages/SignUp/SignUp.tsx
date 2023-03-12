@@ -1,32 +1,29 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import img from "../../asset/image/library.png";
 import loginIcon from "../../asset/image/login.png";
-import React, { useEffect } from "react";
-import { AppDispatch, RootState } from "../../store/store";
-import { userAction } from "../../store/action/userAction";
+import { userApi } from "../../api/userApi";
 
 export const SignUp = (): React.ReactElement => {
 	const [loginForm] = Form.useForm();
 	const navigate = useNavigate();
-	const dispatch: AppDispatch = useDispatch();
-
-	const userAccessToken = useSelector(
-		(state: RootState) => state.userReducer.accessToken,
-	);
-	useEffect(() => {
-		userAccessToken && navigate("/");
-	}, [userAccessToken]);
-
 	const onFinish = async (values: any) => {
 		try {
-			dispatch(
-				userAction.signUp({
-					email: values.email,
-					password: values.password,
-				}),
-			);
+			const res = await userApi.signUp({
+				email: values.email,
+				password: values.password,
+			});
+			if (res) {
+				const data = {
+					email: res.data.userInfor.email,
+					role: res.data.userInfor.role,
+					accessToken: res.data.accessToken,
+					refreshToken: res.data.refreshToken,
+				};
+				localStorage.setItem("user", JSON.stringify(data));
+				if (data.role === "user") navigate("/");
+				if (data.role === "admin") navigate("/statistical");
+			}
 		} catch (e) {
 			console.log(e);
 		}

@@ -1,12 +1,9 @@
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { adminRoute, publicRoute } from "./listRoute";
+import { adminRoute, publicRoute, userRoute } from "./listRoute";
 
 const AuthWrapper = () => {
-	const userAccessToken = useSelector(
-		(state: RootState) => state.userReducer.accessToken,
-	);
+	const user = JSON.parse(localStorage.getItem("user") || "{}");
+	const userAccessToken = user.accessToken;
 	if (userAccessToken) {
 		return <Outlet />;
 	}
@@ -14,7 +11,8 @@ const AuthWrapper = () => {
 };
 
 const AdminRoleWrapper = () => {
-	const role = useSelector((state: RootState) => state.userReducer.role);
+	const user = JSON.parse(localStorage.getItem("user") || "{}");
+	const role = user.role;
 	if (role === "admin") {
 		return <Outlet />;
 	}
@@ -46,6 +44,15 @@ export const Router = () => {
 							);
 						})}
 					</Route>
+					{userRoute.map((item) => {
+						return (
+							<Route
+								path={item.url}
+								element={item.element}
+								key={item.url}
+							/>
+						);
+					})}
 				</Route>
 			</Routes>
 		</>

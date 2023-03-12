@@ -42,7 +42,7 @@ export const ManagePromotion = (): React.ReactElement => {
 			title: "Mã khuyến mãi",
 			dataIndex: "promotionId",
 			key: "promotionId",
-			render: (text, record) => (
+			render: (text) => (
 				<div className="ms__table--name">
 					<span>{text}</span>
 				</div>
@@ -67,7 +67,7 @@ export const ManagePromotion = (): React.ReactElement => {
 		{
 			title: "Hành động",
 			key: "action",
-			render: (item, record) => (
+			render: (item) => (
 				<Space size="middle">
 					<Tooltip title="Sửa">
 						<EditOutlined
