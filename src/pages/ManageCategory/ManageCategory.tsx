@@ -1,7 +1,7 @@
 import { Button } from "antd";
 import { categoryApi } from "../../api/categoryApi";
 
-export const Category = (): React.ReactElement => {
+export const ManageCategory = (): React.ReactElement => {
 	const handleGetAllCategory = async () => {
 		try {
 			const res = await categoryApi.create({

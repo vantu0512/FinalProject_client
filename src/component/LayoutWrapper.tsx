@@ -126,7 +126,10 @@ const LayoutWrapper = () => {
 							const res = await userApi.signOut({
 								refreshToken: userRefreshToken,
 							});
-							if (res) localStorage.removeItem("user");
+							if (res) {
+								localStorage.removeItem("user");
+								navigate("/");
+							}
 						} catch (e: any) {
 							console.log(e);
 							toast.error(e.message);
@@ -173,8 +176,9 @@ const LayoutWrapper = () => {
 							)}
 						<Layout.Content
 							style={{
+								marginTop: currentPath !== "sign-in" ? 64 : 0,
 								padding:
-									userAccessToken && role === "user"
+									currentPath !== "sign-in"
 										? "0 40px"
 										: "0px",
 								backgroundColor: "#FFFFFF",

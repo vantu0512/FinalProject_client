@@ -1,5 +1,5 @@
 import { Breadcrumb } from "antd";
-import { HomeOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Layout } from "antd";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
@@ -27,9 +27,9 @@ export const Header = (): React.ReactElement => {
 					}}
 				>
 					<Breadcrumb.Item>
-						<HomeOutlined
-							style={{ color: "blue", fontSize: 20 }}
-							onClick={() => navigate("/")}
+						<ArrowLeftOutlined
+							onClick={() => navigate(-1)}
+							style={{ fontSize: 18, color: "blue" }}
 						/>
 					</Breadcrumb.Item>
 					<Breadcrumb.Item>

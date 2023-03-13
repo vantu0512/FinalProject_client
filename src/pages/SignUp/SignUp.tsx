@@ -3,10 +3,19 @@ import { useNavigate } from "react-router-dom";
 import img from "../../asset/image/library.png";
 import loginIcon from "../../asset/image/login.png";
 import { userApi } from "../../api/userApi";
+import { useEffect } from "react";
 
 export const SignUp = (): React.ReactElement => {
 	const [loginForm] = Form.useForm();
 	const navigate = useNavigate();
+	const user = JSON.parse(localStorage.getItem("user") || "{}");
+	const role = user.role;
+
+	useEffect(() => {
+		role && role === "user" && navigate("/");
+		role && role === "admin" && navigate("/statistical");
+	}, []);
+
 	const onFinish = async (values: any) => {
 		try {
 			const res = await userApi.signUp({

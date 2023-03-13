@@ -1,12 +1,11 @@
 import {
-	// HomeOutlined,
-	ShoppingCartOutlined,
+	PayCircleOutlined,
 	FundOutlined,
 	UserOutlined,
-	SolutionOutlined,
 	LogoutOutlined,
 	ProfileOutlined,
-	TeamOutlined,
+	WalletOutlined,
+	UserSwitchOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import { useMemo } from "react";
@@ -26,14 +25,12 @@ function getItem(label: string, key: string, icon?: any, children?: any) {
 	};
 }
 const items: any = [
-	// getItem("Trang chủ", "0", <HomeOutlined />),
-	getItem("Thống kê", "1", <FundOutlined />),
-	getItem("Quản lý đơn hàng", "2", <ShoppingCartOutlined />),
-	getItem("Quản lý tài khoản", "3", <UserOutlined />),
-	getItem("Quản lý quyền truy cập", "4", <TeamOutlined />),
-	getItem("Quản lý sản phẩm", "5", <SolutionOutlined />),
-	getItem("Quản lý danh mục sản phẩm", "6", <ProfileOutlined />),
-	getItem("Quản lý tin tức", "7", <ProfileOutlined />),
+	getItem("Quản lý tài khoản", "1", <UserOutlined />),
+	getItem("Quản lý quyền truy cập", "2", <UserSwitchOutlined />),
+	getItem("Quản lý sản phẩm", "3", <WalletOutlined />),
+	getItem("Quản lý danh mục sản phẩm", "4", <ProfileOutlined />),
+	getItem("Quản lý đơn hàng", "5", <PayCircleOutlined />),
+	getItem("Quản lý tin tức", "6", <FundOutlined />),
 	getItem("Quản lý trang", "7", <ProfileOutlined />),
 ];
 
@@ -45,45 +42,39 @@ type ArrTabsType = {
 
 const arrTabs: ArrTabsType[] = [
 	{
-		key: 0,
-		tabName: "Trang chủ",
-		url: "/",
-	},
-	{
 		key: 1,
-		tabName: "Thống kê",
-		url: "/statistical",
+		tabName: "Quản lý tài khoản",
+		url: "/manage-account",
 	},
 	{
 		key: 2,
-		tabName: "Quản lý đơn đặt hàng",
-		url: "/manage-order",
+		tabName: "Quản lý quyền truy cập",
+		url: "/manage-access-right",
 	},
 	{
 		key: 3,
-		tabName: "Quản lý nhân viên",
-		url: "/manage-staff",
+		tabName: "Quản lý sản phẩm",
+		url: "/manage-product",
 	},
 	{
 		key: 4,
-		tabName: "Quản lý khách hàng",
-		url: "/manage-client",
+		tabName: "Quản lý danh mục sản phẩm",
+		url: "/manage-category",
 	},
 	{
 		key: 5,
 		tabName: "Quản lý nhà cung cấp",
-		url: "/manage-supplier",
+		url: "/manage-order",
 	},
 	{
 		key: 6,
 		tabName: "Quản lý sản phẩm",
-		url: "/manage-product",
+		url: "/manage-news",
 	},
-
 	{
 		key: 7,
-		tabName: "Quản lý khuyến mãi",
-		url: "/manage-promotion",
+		tabName: "Quản lý trang",
+		url: "/manage-page",
 	},
 ];
 
