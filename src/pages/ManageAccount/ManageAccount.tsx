@@ -1,84 +1,64 @@
-import { Space, Table, Tag } from "antd";
+import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 export const ManageAccount = (): React.ReactElement => {
-	type DataType = {
-		key: string;
-		name: string;
-		age: number;
+	type UserType = {
+		email: string;
+		fullName: string;
+		role: string;
 		address: string;
-		tags: string[];
 	};
 
-	const columns: ColumnsType<DataType> = [
+	const columns: ColumnsType<UserType> = [
 		{
-			title: "Name",
-			dataIndex: "name",
-			key: "name",
-			render: (text) => <a>{text}</a>,
+			title: "Email",
+			dataIndex: "email",
+			render: (text) => <span>{text}</span>,
 		},
 		{
-			title: "Age",
-			dataIndex: "age",
-			key: "age",
+			title: "Full name",
+			dataIndex: "fullName",
+		},
+		{
+			title: "Role",
+			dataIndex: "role",
 		},
 		{
 			title: "Address",
 			dataIndex: "address",
-			key: "address",
 		},
 		{
-			title: "Tags",
-			key: "tags",
-			dataIndex: "tags",
-			render: (_, { tags }) => (
+			title: "Chức năng",
+			render: () => (
 				<>
-					{tags.map((tag) => {
-						let color = tag.length > 5 ? "geekblue" : "green";
-						if (tag === "loser") {
-							color = "volcano";
-						}
-						return (
-							<Tag color={color} key={tag}>
-								{tag.toUpperCase()}
-							</Tag>
-						);
-					})}
+					<span style={{ marginLeft: 8, cursor: "pointer" }}>
+						<EditOutlined />
+					</span>
+					<span style={{ marginLeft: 8, cursor: "pointer" }}>
+						<DeleteOutlined />
+					</span>
 				</>
 			),
 		},
-		{
-			title: "Action",
-			key: "action",
-			render: (_, record) => (
-				<Space size="middle">
-					<a>Invite {record.name}</a>
-					<a>Delete</a>
-				</Space>
-			),
-		},
 	];
-	const data: DataType[] = [
+	const data: UserType[] = [
 		{
-			key: "1",
-			name: "John Brown",
-			age: 32,
+			email: "asdfasd@gmail.com",
+			fullName: "John Brown",
+			role: "admin",
 			address: "New York No. 1 Lake Park",
-			tags: ["nice", "developer"],
 		},
 		{
-			key: "2",
-			name: "Jim Green",
-			age: 42,
+			email: "asdfasd@gmail.com",
+			fullName: "Jim Green",
+			role: "admin",
 			address: "London No. 1 Lake Park",
-			tags: ["loser"],
 		},
 		{
-			key: "3",
-			name: "Joe Black",
-			age: 32,
+			email: "asdfasd@gmail.com",
+			fullName: "Joe Black",
+			role: "admin",
 			address: "Sydney No. 1 Lake Park",
-			tags: ["cool", "teacher"],
 		},
 	];
 	return (
