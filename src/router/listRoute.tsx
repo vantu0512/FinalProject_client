@@ -1,4 +1,3 @@
-import { Component403 } from "../component/Component403/Component403";
 import { ManageCategory } from "../pages/ManageCategory/ManageCategory";
 import { Home } from "../pages/Home/Home";
 import { ManageAccessRight } from "../pages/ManageAccessRight/ManageAccessRight";
@@ -65,9 +64,5 @@ export const publicRoute = [
 	{
 		url: "/sign-up",
 		element: <SignUp />,
-	},
-	{
-		url: "/component403",
-		element: <Component403 />,
 	},
 ];

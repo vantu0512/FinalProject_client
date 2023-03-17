@@ -9,4 +9,5 @@ export const userApi = {
 	create: (body: UserType) => axiosConfig.post("/create-new-user", body),
 	update: (body: UserType) => axiosConfig.put("/update-user", body),
 	delete: (id: string) => axiosConfig.delete(`/delete-user/${id}`),
+	getAllUser: () => axiosConfig.get("/get-all-user"),
 };
