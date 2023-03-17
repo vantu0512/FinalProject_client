@@ -13,6 +13,8 @@ export type UserType = {
 	gender?: string;
 	age?: string;
 	role?: string;
+	fullName?: string;
+	address?: string;
 	accessToken?: string;
 	refreshToken?: string;
 };

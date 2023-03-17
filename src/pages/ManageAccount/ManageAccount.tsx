@@ -1,16 +1,13 @@
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { userApi } from "../../api/userApi";
+import { ModalAccount } from "./ModalAccount";
+import { UserType } from "../../type/type";
 export const ManageAccount = (): React.ReactElement => {
-	type UserType = {
-		userName?: string;
-		email?: string;
-		fullName?: string;
-		role?: string;
-		address?: string;
-	};
+	const [data, setData] = useState<UserType[]>([]);
+	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
 	const columns: ColumnsType<UserType> = [
 		{
@@ -34,40 +31,35 @@ export const ManageAccount = (): React.ReactElement => {
 			title: "Chức năng",
 			render: () => (
 				<>
-					<span style={{ marginLeft: 8, cursor: "pointer" }}>
+					<span
+						style={{
+							marginLeft: 8,
+							cursor: "pointer",
+							color: "blue",
+							fontSize: 16,
+						}}
+					>
 						<EditOutlined />
 					</span>
-					<span style={{ marginLeft: 8, cursor: "pointer" }}>
+					<span
+						style={{
+							marginLeft: 8,
+							cursor: "pointer",
+							color: "red",
+							fontSize: 16,
+						}}
+					>
 						<DeleteOutlined />
 					</span>
 				</>
 			),
 		},
 	];
-	// const data: UserType[] = [
-	// 	{
-	// 		email: "asdfasd@gmail.com",
-	// 		fullName: "John Brown",
-	// 		role: "admin",
-	// 		address: "New York No. 1 Lake Park",
-	// 	},
-	// 	{
-	// 		email: "asdfasd@gmail.com",
-	// 		fullName: "Jim Green",
-	// 		role: "admin",
-	// 		address: "London No. 1 Lake Park",
-	// 	},
-	// 	{
-	// 		email: "asdfasd@gmail.com",
-	// 		fullName: "Joe Black",
-	// 		role: "admin",
-	// 		address: "Sydney No. 1 Lake Park",
-	// 	},
-	// ];
 
-	// const [data, setData] = useState<UserType[]>([]);
+	useEffect(() => {
+		handleGetAllAccount();
+	}, []);
 
-	const [data, setData] = useState<UserType[]>([]);
 	const handleGetAllAccount = async (): Promise<any> => {
 		try {
 			const res = await userApi.getAllUser();
@@ -93,12 +85,32 @@ export const ManageAccount = (): React.ReactElement => {
 		});
 		return arr;
 	};
-	useEffect(() => {
-		handleGetAllAccount();
-	}, []);
+
+	const handleClose = () => {
+		setIsOpenModal(false);
+	};
+
 	return (
 		<>
+			<div
+				style={{
+					width: "100%",
+					display: "flex",
+					justifyContent: "end",
+				}}
+			>
+				<Button
+					type="primary"
+					style={{ margin: 8 }}
+					onClick={() => {
+						setIsOpenModal(true);
+					}}
+				>
+					Add account
+				</Button>
+			</div>
 			<Table columns={columns} dataSource={data} />
+			{isOpenModal && <ModalAccount handleClose={handleClose} />}
 		</>
 	);
 };
