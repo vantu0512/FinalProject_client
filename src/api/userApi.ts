@@ -7,7 +7,7 @@ export const userApi = {
 	refreshToken: (body: TokenType) => axiosConfig.post("/refresh-token", body),
 	signOut: (body: UserType) => axiosConfig.post("/sign-out", body),
 	add: (body: UserType) => axiosConfig.post("/add-user", body),
-	update: (body: UserType) => axiosConfig.put("/update-user", body),
-	delete: (id: string) => axiosConfig.delete(`/delete-user/${id}`),
-	getAllUser: () => axiosConfig.get("/get-all-user"),
+	edit: (body: UserType) => axiosConfig.put("/edit-user", body),
+	delete: (params: any) => axiosConfig.delete("/delete-user", { params }),
+	getAllUser: (params: any) => axiosConfig.get("/get-all-user", { params }),
 };

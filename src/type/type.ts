@@ -8,6 +8,7 @@ export type CartType = {
 };
 
 export type UserType = {
+	_id?: string;
 	email?: string;
 	password?: string;
 	gender?: string;

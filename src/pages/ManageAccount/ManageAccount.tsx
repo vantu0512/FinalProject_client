@@ -1,14 +1,26 @@
-import { Button, Table } from "antd";
+import "../../asset/style/ManageAccount.scss";
+import { Button, Input, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { userApi } from "../../api/userApi";
 import { ModalAccount } from "./ModalAccount";
 import { UserType } from "../../type/type";
+import { CONSTANT } from "../../constant/constant";
+import { PaginationComponent } from "../../component/Pagination/PaginationComponent";
+import { useSearchParams } from "react-router-dom";
+import { SearchParams } from "../../type/common";
+import { ConfirmModal } from "../../component/ConfirmModal/ConfirmModal";
+import { toast } from "react-toastify";
 export const ManageAccount = (): React.ReactElement => {
 	const [data, setData] = useState<UserType[]>([]);
+	const [dataToModal, setDataToModal] = useState<UserType>({});
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-
+	const [typeModal, setTypeModal] = useState<string>("create");
+	const [searchParams, setSearchParams] = useSearchParams();
+	const page = searchParams.get("page") || CONSTANT.DEFAULT_PAGE;
+	const size = searchParams.get("size") || CONSTANT.DEFAULT_SIZE;
+	const keyword = searchParams.get("keyword") || CONSTANT.DEFAULT_KEYWORD;
 	const columns: ColumnsType<UserType> = [
 		{
 			title: "Email",
@@ -29,7 +41,7 @@ export const ManageAccount = (): React.ReactElement => {
 		},
 		{
 			title: "Chức năng",
-			render: () => (
+			render: (record) => (
 				<>
 					<span
 						style={{
@@ -39,7 +51,13 @@ export const ManageAccount = (): React.ReactElement => {
 							fontSize: 16,
 						}}
 					>
-						<EditOutlined />
+						<EditOutlined
+							onClick={() => {
+								setIsOpenModal(true);
+								setTypeModal("edit");
+								setDataToModal(record);
+							}}
+						/>
 					</span>
 					<span
 						style={{
@@ -49,7 +67,9 @@ export const ManageAccount = (): React.ReactElement => {
 							fontSize: 16,
 						}}
 					>
-						<DeleteOutlined />
+						<DeleteOutlined
+							onClick={() => handleDeleteUser(record?._id)}
+						/>
 					</span>
 				</>
 			),
@@ -57,12 +77,16 @@ export const ManageAccount = (): React.ReactElement => {
 	];
 
 	useEffect(() => {
-		handleGetAllAccount();
-	}, []);
+		handleGetAllUser({
+			page,
+			size,
+			keyword,
+		});
+	}, [page, size, keyword]);
 
-	const handleGetAllAccount = async (): Promise<any> => {
+	const handleGetAllUser = async (params: SearchParams): Promise<any> => {
 		try {
-			const res = await userApi.getAllUser();
+			const res = await userApi.getAllUser(params);
 			if (res?.data?.data) {
 				const arr = handleFormatData(res.data.data);
 				console.log(arr);
@@ -76,6 +100,7 @@ export const ManageAccount = (): React.ReactElement => {
 	const handleFormatData = (data: any) => {
 		const arr: UserType[] = data.map((item: any) => {
 			return {
+				_id: item._id,
 				userName: item.userName,
 				email: item.email,
 				fullName: item.fullName,
@@ -86,22 +111,63 @@ export const ManageAccount = (): React.ReactElement => {
 		return arr;
 	};
 
+	const timeOut: any = useRef();
+	const handleKeywordChange = (event: any) => {
+		if (timeOut.current) clearTimeout(timeOut.current);
+		timeOut.current = setTimeout(() => {
+			console.log(event.target.value);
+			searchParams.set("keyword", event.target.value);
+			setSearchParams(searchParams);
+		}, 1000);
+	};
+
+	const handleDeleteUser = (id: string) => {
+		ConfirmModal({
+			icon: <></>,
+			onOk: async () => {
+				try {
+					const params = {
+						id,
+					};
+					console.log(id);
+
+					const res = await userApi.delete(params);
+					if (res?.data?.status === 200)
+						toast.success(res.data.message);
+				} catch (error: any) {
+					console.log(error);
+
+					toast.error(error.message);
+				}
+			},
+			className: "confirm__modal",
+			title: "Bạn có chắc muốn xóa không",
+			description: "Dữ liệu người dùng này sẽ bị xóa vĩnh viễn",
+			canceText: `Hủy bỏ`,
+			okText: "Xóa",
+		});
+	};
+
 	const handleClose = () => {
 		setIsOpenModal(false);
 	};
 
 	return (
-		<>
+		<div className="manage-account">
 			<div
+				className="manage-account-header"
 				style={{
 					width: "100%",
 					display: "flex",
 					justifyContent: "end",
 				}}
 			>
+				<Input
+					placeholder="Nhập từ khóa tìm kiếm"
+					onChange={(event) => handleKeywordChange(event)}
+				/>
 				<Button
 					type="primary"
-					style={{ margin: 8 }}
 					onClick={() => {
 						setIsOpenModal(true);
 					}}
@@ -109,8 +175,19 @@ export const ManageAccount = (): React.ReactElement => {
 					Add account
 				</Button>
 			</div>
-			<Table columns={columns} dataSource={data} />
-			{isOpenModal && <ModalAccount handleClose={handleClose} />}
-		</>
+			<div className="manage-account-table">
+				<Table columns={columns} dataSource={data} pagination={false} />
+				<div className="table-pagination">
+					<PaginationComponent />
+				</div>
+			</div>
+			{isOpenModal && (
+				<ModalAccount
+					handleClose={handleClose}
+					typeModal={typeModal}
+					dataToModal={dataToModal}
+				/>
+			)}
+		</div>
 	);
 };

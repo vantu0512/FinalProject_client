@@ -1,9 +1,13 @@
 import { Button, Form, Input, Modal, Select } from "antd";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 import { userApi } from "../../api/userApi";
 import { UserType } from "../../type/type";
 
 type Props = {
 	handleClose: () => void;
+	typeModal: string;
+	dataToModal: UserType;
 };
 
 type Option = {
@@ -11,7 +15,11 @@ type Option = {
 	value: string;
 };
 
-export const ModalAccount = ({ handleClose }: Props): React.ReactElement => {
+export const ModalAccount = ({
+	handleClose,
+	typeModal,
+	dataToModal,
+}: Props): React.ReactElement => {
 	const [form] = Form.useForm();
 	const option: Option[] = [
 		{
@@ -24,24 +32,57 @@ export const ModalAccount = ({ handleClose }: Props): React.ReactElement => {
 		},
 	];
 
+	useEffect(() => {
+		if (typeModal === "edit") handleFillForm(dataToModal);
+	}, []);
+
+	const handleFillForm = (data: UserType) => {
+		form.setFieldValue("email", data.email);
+		form.setFieldValue("role", data.role);
+		form.setFieldValue("fullName", data.fullName);
+		form.setFieldValue("address", data.address);
+	};
+
 	const onFinish = () => {
 		const data: UserType = {
 			email: form.getFieldValue("email"),
+			password: form.getFieldValue("password"),
 			role: form.getFieldValue("role"),
 			fullName: form.getFieldValue("fullName"),
 			address: form.getFieldValue("address"),
 		};
-		handleAddAccount(data);
+		if (typeModal === "add") handleAddAccount(data);
+		else handleEditAccount(data);
 	};
 
 	const handleAddAccount = async (user: UserType): Promise<any> => {
 		try {
 			const res = await userApi.add(user);
-			if (res) console.log(res);
+			if (res?.data) {
+				if (res.data.errCode === 0) toast.success(res.data.errMessage);
+				if (res.data.errCode === 1) toast.error(res.data.errMessage);
+			}
 		} catch (error) {
 			console.log(error);
+		} finally {
+			handleClose();
 		}
 	};
+
+	const handleEditAccount = async (user: UserType): Promise<any> => {
+		try {
+			const res = await userApi.edit(user);
+			if (res?.data) {
+				if (res.data.errCode === 0) toast.success(res.data.errMessage);
+				if (res.data.errCode === 1) toast.error(res.data.errMessage);
+			}
+		} catch (error) {
+			console.log(error);
+		} finally {
+			handleClose();
+		}
+	};
+
 	return (
 		<>
 			<Modal
@@ -73,6 +114,25 @@ export const ModalAccount = ({ handleClose }: Props): React.ReactElement => {
 							{
 								type: "email",
 								message: "Email không hợp lệ",
+							},
+						]}
+					>
+						<Input />
+					</Form.Item>
+					<Form.Item
+						label="Password"
+						name="password"
+						rules={[
+							{
+								required: true,
+								message: "Không được để trống",
+							},
+							{
+								pattern: new RegExp(
+									/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
+								),
+								message:
+									"Mật khẩu gồm chữ hoa chữ thường và số, tối thiểu 8 ký tự",
 							},
 						]}
 					>
