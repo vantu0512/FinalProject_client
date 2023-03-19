@@ -32,11 +32,11 @@ export const ModalAccount = ({
 	const option: Option[] = [
 		{
 			label: "Admin",
-			value: "Admin",
+			value: "admin",
 		},
 		{
 			label: "User",
-			value: "User",
+			value: "user",
 		},
 	];
 

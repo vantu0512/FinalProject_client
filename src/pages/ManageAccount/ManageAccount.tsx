@@ -130,8 +130,10 @@ export const ManageAccount = (): React.ReactElement => {
 					console.log(id);
 
 					const res = await userApi.delete(params);
-					if (res?.data?.status === 200)
+					if (res && res.status === 200) {
 						toast.success(res.data.message);
+						await handleGetAllUser({ page, size });
+					}
 				} catch (error: any) {
 					console.log(error);
 

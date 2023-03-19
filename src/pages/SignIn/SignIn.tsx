@@ -84,7 +84,11 @@ export const SignIn = (): React.ReactElement => {
 							rules={[
 								{
 									required: true,
-									message: "Please input your email!",
+									message: "Trường này không được để trống!",
+								},
+								{
+									type: "email",
+									message: "Email không hợp lệ!",
 								},
 							]}
 						>
@@ -97,7 +101,14 @@ export const SignIn = (): React.ReactElement => {
 							rules={[
 								{
 									required: true,
-									message: "Please input your password!",
+									message: "Không được để trống",
+								},
+								{
+									pattern: new RegExp(
+										/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
+									),
+									message:
+										"Mật khẩu gồm chữ hoa chữ thường và số, tối thiểu 8 ký tự",
 								},
 							]}
 						>

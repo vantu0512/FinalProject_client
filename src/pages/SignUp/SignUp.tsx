@@ -84,7 +84,11 @@ export const SignUp = (): React.ReactElement => {
 							rules={[
 								{
 									required: true,
-									message: "Please input your email!",
+									message: "Trường này không được để trống!",
+								},
+								{
+									type: "email",
+									message: "Email không hợp lệ!",
 								},
 							]}
 						>
@@ -97,8 +101,49 @@ export const SignUp = (): React.ReactElement => {
 							rules={[
 								{
 									required: true,
-									message: "Please input your password!",
+									message: "Không được để trống",
 								},
+								{
+									pattern: new RegExp(
+										/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
+									),
+									message:
+										"Mật khẩu gồm chữ hoa chữ thường và số, tối thiểu 8 ký tự",
+								},
+							]}
+						>
+							<Input.Password size="large" />
+						</Form.Item>
+						<Form.Item
+							label="Confirm password"
+							name="confirmPassword"
+							rules={[
+								{
+									required: true,
+									message: "Không được để trống",
+								},
+								{
+									pattern: new RegExp(
+										/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
+									),
+									message:
+										"Mật khẩu gồm chữ hoa chữ thường và số, tối thiểu 8 ký tự",
+								},
+								({ getFieldValue }) => ({
+									validator(_, value) {
+										if (
+											!value ||
+											getFieldValue("password") === value
+										) {
+											return Promise.resolve();
+										}
+										return Promise.reject(
+											new Error(
+												"Xác nhận mật khẩu không chính xác!",
+											),
+										);
+									},
+								}),
 							]}
 						>
 							<Input.Password size="large" />
