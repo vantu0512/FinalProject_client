@@ -127,12 +127,8 @@ export const ContentDrawer: React.FC<Props> = ({ data }: Props) => {
 						]}
 					>
 						<Select>
-							<Select.Option value={0}>
-								Thực phẩm tươi sống
-							</Select.Option>
-							<Select.Option value={1}>
-								Thực phẩm đóng gói
-							</Select.Option>
+							<Select.Option value={0}>Addidas</Select.Option>
+							<Select.Option value={1}>Nike</Select.Option>
 						</Select>
 					</Form.Item>
 				</Col>

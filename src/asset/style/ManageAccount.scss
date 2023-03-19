@@ -11,6 +11,10 @@
         flex-direction: column;
         justify-content: center;
 
+        .table-content{
+            min-height: 300px;
+        }
+
         .table-pagination{
             display: flex;
             justify-content: center;

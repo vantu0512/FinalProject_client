@@ -1,8 +1,8 @@
 import "../../asset/style/ManageAccount.scss";
-import { Button, Input, Table } from "antd";
+import { Button, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { userApi } from "../../api/userApi";
 import { ModalAccount } from "./ModalAccount";
 import { UserType } from "../../type/type";
@@ -12,12 +12,13 @@ import { useSearchParams } from "react-router-dom";
 import { SearchParams } from "../../type/common";
 import { ConfirmModal } from "../../component/ConfirmModal/ConfirmModal";
 import { toast } from "react-toastify";
+import { SearchComponent } from "../../component/SearchComponent/SearchComponent";
 export const ManageAccount = (): React.ReactElement => {
 	const [data, setData] = useState<UserType[]>([]);
 	const [dataToModal, setDataToModal] = useState<UserType>({});
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 	const [typeModal, setTypeModal] = useState<string>("create");
-	const [searchParams, setSearchParams] = useSearchParams();
+	const [searchParams] = useSearchParams();
 	const page = searchParams.get("page") || CONSTANT.DEFAULT_PAGE;
 	const size = searchParams.get("size") || CONSTANT.DEFAULT_SIZE;
 	const keyword = searchParams.get("keyword") || CONSTANT.DEFAULT_KEYWORD;
@@ -25,21 +26,29 @@ export const ManageAccount = (): React.ReactElement => {
 		{
 			title: "Email",
 			dataIndex: "email",
+			fixed: true,
 			render: (text) => <span>{text}</span>,
 		},
 		{
+			fixed: true,
 			title: "Full name",
 			dataIndex: "fullName",
 		},
 		{
+			fixed: true,
+
 			title: "Role",
 			dataIndex: "role",
 		},
 		{
+			fixed: true,
+
 			title: "Address",
 			dataIndex: "address",
 		},
 		{
+			fixed: true,
+
 			title: "Chức năng",
 			render: (record) => (
 				<>
@@ -89,7 +98,6 @@ export const ManageAccount = (): React.ReactElement => {
 			const res = await userApi.getAllUser(params);
 			if (res?.data?.data) {
 				const arr = handleFormatData(res.data.data);
-				console.log(arr);
 				setData(arr);
 			}
 		} catch (error) {
@@ -109,16 +117,6 @@ export const ManageAccount = (): React.ReactElement => {
 			};
 		});
 		return arr;
-	};
-
-	const timeOut: any = useRef();
-	const handleKeywordChange = (event: any) => {
-		if (timeOut.current) clearTimeout(timeOut.current);
-		timeOut.current = setTimeout(() => {
-			console.log(event.target.value);
-			searchParams.set("keyword", event.target.value);
-			setSearchParams(searchParams);
-		}, 1000);
 	};
 
 	const handleDeleteUser = (id: string) => {
@@ -152,8 +150,14 @@ export const ManageAccount = (): React.ReactElement => {
 		setIsOpenModal(false);
 	};
 
+	console.log("render");
+
 	return (
 		<div className="manage-account">
+			<SearchComponent
+				placeholder="Nhập từ khóa tìm kiếm"
+				style={{ width: 600 }}
+			/>
 			<div
 				className="manage-account-header"
 				style={{
@@ -162,21 +166,24 @@ export const ManageAccount = (): React.ReactElement => {
 					justifyContent: "end",
 				}}
 			>
-				<Input
-					placeholder="Nhập từ khóa tìm kiếm"
-					onChange={(event) => handleKeywordChange(event)}
-				/>
 				<Button
 					type="primary"
 					onClick={() => {
 						setIsOpenModal(true);
+						setTypeModal("add");
 					}}
 				>
 					Add account
 				</Button>
 			</div>
 			<div className="manage-account-table">
-				<Table columns={columns} dataSource={data} pagination={false} />
+				<div className="table-content">
+					<Table
+						columns={columns}
+						dataSource={[...data]}
+						pagination={false}
+					/>
+				</div>
 				<div className="table-pagination">
 					<PaginationComponent />
 				</div>
@@ -184,6 +191,7 @@ export const ManageAccount = (): React.ReactElement => {
 			{isOpenModal && (
 				<ModalAccount
 					handleClose={handleClose}
+					getAllUser={handleGetAllUser}
 					typeModal={typeModal}
 					dataToModal={dataToModal}
 				/>

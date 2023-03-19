@@ -13,7 +13,7 @@ export const SignIn = (): React.ReactElement => {
 
 	useEffect(() => {
 		role && role === "user" && navigate("/");
-		role && role === "admin" && navigate("/statistical");
+		role && role === "admin" && navigate("/manage-account");
 	}, []);
 
 	const onFinish = async (values: { email: string; password: string }) => {
@@ -31,7 +31,7 @@ export const SignIn = (): React.ReactElement => {
 				};
 				localStorage.setItem("user", JSON.stringify(data));
 				if (data.role === "user") navigate("/");
-				if (data.role === "admin") navigate("/statistical");
+				if (data.role === "admin") navigate("/manage-account");
 			}
 		} catch (e) {
 			console.log(e);
