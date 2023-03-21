@@ -100,7 +100,11 @@ export const ModalAccount = ({
 	return (
 		<>
 			<Modal
-				title="Tạo tài khoản"
+				title={
+					typeModal === "edit"
+						? "Chỉnh sửa tài khoản"
+						: "Tạo tài khoản"
+				}
 				open={true}
 				onOk={handleClose}
 				onCancel={handleClose}

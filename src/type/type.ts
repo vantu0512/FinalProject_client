@@ -20,6 +20,16 @@ export type UserType = {
 	refreshToken?: string;
 };
 
+export type ProductType = {
+	name?: string;
+	description?: string;
+	categoryId?: string;
+	categoryName?: string;
+	imgUrl?: string;
+	price?: number;
+	datePublish?: string;
+};
+
 export type TokenType = {
 	accessToken: string;
 	refreshToken: string;
@@ -28,13 +38,6 @@ export type TokenType = {
 export type CategoryType = {
 	categoryId: string;
 	name: string;
-};
-
-export type ProductType = {
-	_id: string;
-	productName: string;
-	price: string;
-	imgUrl?: string;
 };
 
 export type RouteApp = {

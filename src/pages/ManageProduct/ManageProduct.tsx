@@ -1,192 +1,208 @@
-import { Button, Drawer, Input, Modal, Space, Table, Tooltip } from "antd";
-import {
-	SearchOutlined,
-	EditOutlined,
-	DeleteOutlined,
-	PlusCircleOutlined,
-	ExclamationCircleOutlined,
-} from "@ant-design/icons";
+import "../../asset/style/ManageAccount.scss";
+import { Button, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-
-import "../../asset/style/ManageStaff.scss";
-import { useState } from "react";
-import { ContentDrawer } from "./ContentDrawer";
-import { DataTypeProDuct } from "../../type/type";
-// import { useState } from "react";
-
-const data: DataTypeProDuct[] = [
-	{
-		key: "1",
-		name: "John Brown",
-		brand: "Laptop",
-		thumbnail_url:
-			"https://i.pinimg.com/236x/08/44/c5/0844c5eb33e92d674e6ad124bac4903a.jpg",
-		quantity: 1000,
-		sold: 20,
-		description: "hihi",
-		specifications: "huhu",
-		sale_percent: 28,
-		price: 10000,
-		type: 0,
-	},
-];
-
-export const ManageProduct: React.FC = () => {
-	const [productSelect, setProductSelect] = useState(null);
-	const [openDrawer, setOpenDrawer] = useState(false);
-	const [modal, contextHolder] = Modal.useModal();
-
-	const showDrawer = () => {
-		setOpenDrawer(true);
-	};
-
-	const onClose = () => {
-		setOpenDrawer(false);
-		resetProductSelect();
-	};
-
-	const resetProductSelect = () => setProductSelect(null);
-
-	const columns: ColumnsType<DataTypeProDuct> = [
-		{
-			title: "Ảnh",
-			dataIndex: "thumbnail_url",
-			key: "thumbnail_url",
-			render: (url) => (
-				<div style={{ width: "50px", height: "30px" }}>
-					<img
-						src={url}
-						alt=""
-						style={{
-							width: "100%",
-							height: "100%",
-							objectFit: "cover",
-						}}
-					/>
-					,
-				</div>
-			),
-		},
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { userApi } from "../../api/userApi";
+import { ModalProduct } from "./ModalProduct";
+import { ProductType } from "../../type/type";
+import { CONSTANT } from "../../constant/constant";
+import { PaginationComponent } from "../../component/Pagination/PaginationComponent";
+import { useSearchParams } from "react-router-dom";
+import { SearchParams } from "../../type/common";
+import { ConfirmModal } from "../../component/ConfirmModal/ConfirmModal";
+import { toast } from "react-toastify";
+import { SearchComponent } from "../../component/SearchComponent/SearchComponent";
+export const ManageProduct = (): React.ReactElement => {
+	const [data, setData] = useState<ProductType[]>([]);
+	const [dataToModal, setDataToModal] = useState<ProductType>({});
+	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+	const [typeModal, setTypeModal] = useState<string>("create");
+	const [searchParams] = useSearchParams();
+	const page = searchParams.get("page") || CONSTANT.DEFAULT_PAGE;
+	const size = searchParams.get("size") || CONSTANT.DEFAULT_SIZE;
+	const keyword = searchParams.get("keyword") || CONSTANT.DEFAULT_KEYWORD;
+	const columns: ColumnsType<ProductType> = [
 		{
 			title: "Tên sản phẩm",
-			dataIndex: "name",
-			key: "name",
+			dataIndex: "productName",
+			render: (text) => <span>{text}</span>,
 		},
 		{
-			title: "Thương hiệu",
-			dataIndex: "brand",
-			key: "brand",
+			title: "Mô tả",
+			dataIndex: "description",
+			render: (text) => <span>{text}</span>,
 		},
 		{
-			title: "Số lượng còn",
-			dataIndex: "quantity",
-			key: "quantity",
+			title: "Thể loại",
+			dataIndex: "categoryName",
+			render: (text) => <span>{text}</span>,
 		},
 		{
-			title: "Đã bán",
-			dataIndex: "sold",
-			key: "sold",
+			title: "Ảnh",
+			dataIndex: "imgUrl",
+			render: (text) => <span>{text}</span>,
 		},
 		{
-			title: "Giá tiền",
+			title: "Đơn giá",
 			dataIndex: "price",
-			key: "price",
+			render: (text) => <span>{text}</span>,
 		},
 		{
-			title: "Khuyễn mãi",
-			dataIndex: "sale_percent",
-			key: "sale_percent",
+			title: "Ngày ra mắt",
+			dataIndex: "datePublish",
+			render: (text) => <span>{text}</span>,
 		},
-
 		{
-			title: "Hành động",
-			key: "action",
-			render: (item) => (
-				<Space size="middle">
-					<Tooltip title="Sửa">
+			title: "Chức năng",
+			render: (record) => (
+				<>
+					<span
+						style={{
+							marginLeft: 8,
+							cursor: "pointer",
+							color: "blue",
+							fontSize: 16,
+						}}
+					>
 						<EditOutlined
-							style={{ cursor: "pointer" }}
 							onClick={() => {
-								setProductSelect(item);
-								showDrawer();
+								setIsOpenModal(true);
+								setTypeModal("edit");
+								setDataToModal(record);
 							}}
 						/>
-					</Tooltip>
-					<Tooltip title="Xóa">
+					</span>
+					<span
+						style={{
+							marginLeft: 8,
+							cursor: "pointer",
+							color: "red",
+							fontSize: 16,
+						}}
+					>
 						<DeleteOutlined
-							style={{ color: "red", cursor: "pointer" }}
-							onClick={confirm}
+							onClick={() => handleDeleteUser(record?._id)}
 						/>
-					</Tooltip>
-				</Space>
+					</span>
+				</>
 			),
 		},
 	];
 
-	const confirm = () => {
-		modal.confirm({
-			title: "Thông báo",
-			icon: <ExclamationCircleOutlined />,
-			content: "Bạn có muốn xóa sản phẩm không ?",
-			okText: "Đồng ý",
-			cancelText: "Hủy",
+	useEffect(() => {
+		handleGetAllUser({
+			page,
+			size,
+			keyword,
+		});
+	}, [page, size, keyword]);
+
+	const handleGetAllUser = async (params: SearchParams): Promise<any> => {
+		try {
+			const res = await userApi.getAllUser(params);
+			if (res?.data?.data) {
+				const arr = handleFormatData(res.data.data);
+				setData(arr);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleFormatData = (data: any) => {
+		const arr: ProductType[] = data.map((item: any) => {
+			return {
+				_id: item._id,
+				userName: item.userName,
+				email: item.email,
+				fullName: item.fullName,
+				role: item.role,
+				address: item.address,
+			};
+		});
+		return arr;
+	};
+
+	const handleDeleteUser = (id: string) => {
+		ConfirmModal({
+			icon: <></>,
+			onOk: async () => {
+				try {
+					const params = {
+						id,
+					};
+					console.log(id);
+
+					const res = await userApi.delete(params);
+					if (res && res.status === 200) {
+						toast.success(res.data.message);
+						await handleGetAllUser({ page, size });
+					}
+				} catch (error: any) {
+					console.log(error);
+
+					toast.error(error.message);
+				}
+			},
+			className: "confirm__modal",
+			title: "Bạn có chắc muốn xóa không",
+			description: "Dữ liệu người dùng này sẽ bị xóa vĩnh viễn",
+			canceText: `Hủy bỏ`,
+			okText: "Xóa",
 		});
 	};
+
+	const handleClose = () => {
+		setIsOpenModal(false);
+	};
+
+	console.log("render");
+
 	return (
-		<div className="ms">
-			<div className="ms__search">
-				<Input
-					placeholder="Nhập tên sản phẩm"
-					prefix={<SearchOutlined />}
-					style={{ width: "20%" }}
-				/>
-				<Button type="primary">Tìm kiếm</Button>
-			</div>
-			<div className="ms__table">
-				<div className="ms__table--buttonAdd">
-					<Button
-						type="primary"
-						icon={<PlusCircleOutlined />}
-						onClick={() => {
-							// showModal();
-							setProductSelect(null);
-							showDrawer();
-						}}
-					>
-						Thêm sản phẩm
-					</Button>
-				</div>
-				<Table
-					columns={columns}
-					dataSource={data}
-					pagination={{
-						position: ["bottomRight"],
-						pageSize: 10,
-						simple: true,
-						// total: 100,
-						showTotal: (total, range) =>
-							`${range[0]} - ${range[1]} trong số ${total}`,
-					}}
-				/>
-			</div>
-			<Drawer
-				title={!productSelect ? "Thêm sản phẩm" : "Sửa thông tin"}
-				width={720}
-				onClose={onClose}
-				open={openDrawer}
-				bodyStyle={{ paddingBottom: 0 }}
-				extra={
-					<Space>
-						<Button onClick={onClose}>Hủy</Button>
-						<Button onClick={onClose} type="primary">
-							Thêm
-						</Button>
-					</Space>
-				}
+		<div className="manage-account">
+			<SearchComponent
+				placeholder="Nhập từ khóa tìm kiếm"
+				style={{ width: 600 }}
+			/>
+			<div
+				className="manage-account-header"
+				style={{
+					width: "100%",
+					display: "flex",
+					justifyContent: "end",
+				}}
 			>
-				<ContentDrawer data={productSelect} />
-			</Drawer>
-			{contextHolder}
+				<Button
+					type="primary"
+					onClick={() => {
+						setIsOpenModal(true);
+						setTypeModal("add");
+					}}
+				>
+					Add product
+				</Button>
+			</div>
+			<div className="manage-account-table">
+				<div className="table-content">
+					<Table
+						columns={columns}
+						dataSource={[...data]}
+						pagination={false}
+					/>
+				</div>
+				<div className="table-pagination">
+					<PaginationComponent />
+				</div>
+			</div>
+			{isOpenModal && (
+				<ModalProduct
+					handleClose={handleClose}
+					getAllUser={handleGetAllUser}
+					typeModal={typeModal}
+					dataToModal={dataToModal}
+				/>
+			)}
 		</div>
 	);
 };
