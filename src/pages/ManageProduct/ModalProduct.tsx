@@ -92,8 +92,8 @@ export const ModalProduct = ({
 	const formatCategory = (data: any) => {
 		const arr: Option[] = data.map((item: any) => {
 			return {
-				label: item.name,
-				value: item.name,
+				label: item.categoryName,
+				value: item.categoryName,
 			};
 		});
 		return arr;
