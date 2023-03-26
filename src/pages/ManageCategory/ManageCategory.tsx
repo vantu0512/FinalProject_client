@@ -4,9 +4,9 @@ import { categoryApi } from "../../api/categoryApi";
 export const ManageCategory = (): React.ReactElement => {
 	const handleGetAllCategory = async () => {
 		try {
-			const res = await categoryApi.create({
+			const res = await categoryApi.add({
 				categoryId: "ct1",
-				name: "adidas",
+				categoryName: "adidas",
 			});
 			if (res) console.log(res);
 		} catch (error) {

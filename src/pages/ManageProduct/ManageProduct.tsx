@@ -3,7 +3,6 @@ import { Button, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { userApi } from "../../api/userApi";
 import { ModalProduct } from "./ModalProduct";
 import { ProductType } from "../../type/type";
 import { CONSTANT } from "../../constant/constant";
@@ -13,6 +12,8 @@ import { SearchParams } from "../../type/common";
 import { ConfirmModal } from "../../component/ConfirmModal/ConfirmModal";
 import { toast } from "react-toastify";
 import { SearchComponent } from "../../component/SearchComponent/SearchComponent";
+import { productApi } from "../../api/productApi";
+// import moment from "moment";
 export const ManageProduct = (): React.ReactElement => {
 	const [data, setData] = useState<ProductType[]>([]);
 	const [dataToModal, setDataToModal] = useState<ProductType>({});
@@ -41,7 +42,12 @@ export const ManageProduct = (): React.ReactElement => {
 		{
 			title: "Ảnh",
 			dataIndex: "imgUrl",
-			render: (text) => <span>{text}</span>,
+			render: (text) => (
+				<img
+					src={text}
+					style={{ width: "60px", objectFit: "cover" }}
+				></img>
+			),
 		},
 		{
 			title: "Đơn giá",
@@ -82,7 +88,7 @@ export const ManageProduct = (): React.ReactElement => {
 						}}
 					>
 						<DeleteOutlined
-							onClick={() => handleDeleteUser(record?._id)}
+							onClick={() => handleDeleteProduct(record?._id)}
 						/>
 					</span>
 				</>
@@ -91,18 +97,18 @@ export const ManageProduct = (): React.ReactElement => {
 	];
 
 	useEffect(() => {
-		handleGetAllUser({
+		handleGetAllProduct({
 			page,
 			size,
 			keyword,
 		});
 	}, [page, size, keyword]);
 
-	const handleGetAllUser = async (params: SearchParams): Promise<any> => {
+	const handleGetAllProduct = async (params: SearchParams): Promise<any> => {
 		try {
-			const res = await userApi.getAllUser(params);
-			if (res?.data?.data) {
-				const arr = handleFormatData(res.data.data);
+			const res = await productApi.getAll(params);
+			if (res?.data?.listProduct) {
+				const arr = handleFormatData(res.data.listProduct);
 				setData(arr);
 			}
 		} catch (error) {
@@ -114,17 +120,18 @@ export const ManageProduct = (): React.ReactElement => {
 		const arr: ProductType[] = data.map((item: any) => {
 			return {
 				_id: item._id,
-				userName: item.userName,
-				email: item.email,
-				fullName: item.fullName,
-				role: item.role,
-				address: item.address,
+				productName: item.productName,
+				description: item.description,
+				categoryName: item.categoryName,
+				imgUrl: item.imgUrl,
+				price: item.price,
+				datePublish: item.datePublish,
 			};
 		});
 		return arr;
 	};
 
-	const handleDeleteUser = (id: string) => {
+	const handleDeleteProduct = (id: string) => {
 		ConfirmModal({
 			icon: <></>,
 			onOk: async () => {
@@ -134,10 +141,10 @@ export const ManageProduct = (): React.ReactElement => {
 					};
 					console.log(id);
 
-					const res = await userApi.delete(params);
+					const res = await productApi.delete(params);
 					if (res && res.status === 200) {
 						toast.success(res.data.message);
-						await handleGetAllUser({ page, size });
+						await handleGetAllProduct({ page, size });
 					}
 				} catch (error: any) {
 					console.log(error);
@@ -198,7 +205,7 @@ export const ManageProduct = (): React.ReactElement => {
 			{isOpenModal && (
 				<ModalProduct
 					handleClose={handleClose}
-					getAllUser={handleGetAllUser}
+					getAllProduct={handleGetAllProduct}
 					typeModal={typeModal}
 					dataToModal={dataToModal}
 				/>

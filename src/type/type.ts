@@ -21,7 +21,8 @@ export type UserType = {
 };
 
 export type ProductType = {
-	name?: string;
+	_id?: string;
+	productName?: string;
 	description?: string;
 	categoryId?: string;
 	categoryName?: string;
@@ -37,7 +38,7 @@ export type TokenType = {
 
 export type CategoryType = {
 	categoryId: string;
-	name: string;
+	categoryName: string;
 };
 
 export type RouteApp = {

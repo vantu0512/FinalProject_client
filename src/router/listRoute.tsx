@@ -9,6 +9,8 @@ import { SignIn } from "../pages/SignIn/SignIn";
 import { SignUp } from "../pages/SignUp/SignUp";
 import { ManageNews } from "../pages/ManageNew/ManageNews";
 import { ManagePage } from "../pages/ManagePage/ManagePage";
+import { DetailProduct } from "../pages/Product/DetailProduct";
+import { Cart } from "../pages/Cart/Cart";
 
 export const adminRoute = [
 	{
@@ -46,6 +48,10 @@ export const userRoute = [
 		url: "/user",
 		element: <ManageCategory />,
 	},
+	{
+		url: "/cart",
+		element: <Cart />,
+	},
 ];
 
 export const publicRoute = [
@@ -56,6 +62,11 @@ export const publicRoute = [
 	{
 		url: "/product",
 		element: <Product />,
+	},
+
+	{
+		url: "/detail-product/:id",
+		element: <DetailProduct />,
 	},
 	{
 		url: "/sign-in",

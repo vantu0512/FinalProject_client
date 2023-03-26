@@ -4,7 +4,7 @@ import {
 	HomeOutlined,
 	ShoppingCartOutlined,
 	ShopOutlined,
-	FundOutlined,
+	// FundOutlined,
 	UserOutlined,
 	// SolutionOutlined,
 	LogoutOutlined,
@@ -61,16 +61,7 @@ const LayoutWrapper = () => {
 			),
 			url: "/product",
 		},
-		{
-			key: 3,
-			label: (
-				<div>
-					<FundOutlined />
-					<span>Danh mục</span>
-				</div>
-			),
-			url: "/category",
-		},
+
 		{
 			key: 4,
 			label: (
