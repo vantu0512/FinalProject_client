@@ -18,7 +18,7 @@ export const SearchComponent = ({
 		if (timeOut.current) clearTimeout(timeOut.current);
 		timeOut.current = setTimeout(() => {
 			console.log(event.target.value);
-			searchParams.set("keyword", event.target.value);
+			searchParams.set("keyword", event.target.value.trim());
 			setSearchParams(searchParams);
 		}, 1000);
 	};

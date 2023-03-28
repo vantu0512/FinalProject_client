@@ -75,7 +75,6 @@ export const Product = (): React.ReactElement => {
 													/>
 												}
 												onClick={() => {
-													console.log("lol");
 													navigate(
 														`/detail-product/${item._id}`,
 													);
@@ -116,7 +115,6 @@ export const Product = (): React.ReactElement => {
 													/>
 												}
 												onClick={() => {
-													console.log("lol");
 													navigate(
 														`/detail-product/${item._id}`,
 													);

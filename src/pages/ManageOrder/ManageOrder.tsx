@@ -1,6 +1,5 @@
-import { Button, Input, Space, Table, Tooltip, Modal } from "antd";
+import { Button, Space, Table, Tooltip, Modal } from "antd";
 import {
-	SearchOutlined,
 	EditOutlined,
 	DeleteOutlined,
 	PlusCircleOutlined,
@@ -11,7 +10,7 @@ import type { ColumnsType } from "antd/es/table";
 import "../../asset/style/ManageStaff.scss";
 import { useState } from "react";
 import { ModalOrder } from "./Modal";
-// import { StatusApi } from "../../constant/statusApi";
+import { SearchComponent } from "../../component/SearchComponent/SearchComponent";
 
 type DataType = {
 	key: string;
@@ -101,7 +100,6 @@ export const ManageOrder = (): React.ReactElement => {
 						<EditOutlined
 							style={{ cursor: "pointer" }}
 							onClick={() => {
-								console.log("first", item);
 								setUserSelect(item);
 								showModal();
 							}}
@@ -142,14 +140,10 @@ export const ManageOrder = (): React.ReactElement => {
 
 	return (
 		<div className="ms">
-			<div className="ms__search">
-				<Input
-					placeholder="Nhập tên từ khóa"
-					prefix={<SearchOutlined />}
-					style={{ width: "40%" }}
-				/>
-				<Button type="primary">Tìm kiếm</Button>
-			</div>
+			<SearchComponent
+				placeholder="Nhập từ khóa tìm kiếm"
+				style={{ width: 600 }}
+			/>
 			<div className="ms__table">
 				<div className="ms__table--buttonAdd">
 					<Button

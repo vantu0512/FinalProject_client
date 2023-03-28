@@ -43,7 +43,6 @@ export const Cart = () => {
 		<>
 			{listProduct && listProduct.length > 0 ? (
 				listProduct.map((item) => {
-					console.log("index", item);
 					return (
 						<div className="cart">
 							<img
@@ -51,7 +50,9 @@ export const Cart = () => {
 								alt=""
 								className="bookImg"
 								onClick={() => {
-									navigate(`/detail-product/${item?._id}`);
+									navigate(
+										`/detail-product/${item?.productId}`,
+									);
 								}}
 							/>
 							<div className="cart-right">

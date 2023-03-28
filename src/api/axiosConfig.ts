@@ -29,8 +29,6 @@ const axiosConfig = axios.create({
 axiosConfig.interceptors.request.use(
 	(config: any) => {
 		const userAccessToken = AuthService.getAccessToken();
-		console.log(userAccessToken);
-
 		if (userAccessToken && config.headers) {
 			config.headers["Authorization"] = `Bearer ${userAccessToken}`;
 		}

@@ -4,21 +4,17 @@ import {
 	HomeOutlined,
 	ShoppingCartOutlined,
 	ShopOutlined,
-	// FundOutlined,
 	UserOutlined,
-	// SolutionOutlined,
 	LogoutOutlined,
-	// ProfileOutlined,
-	// TeamOutlined,
 } from "@ant-design/icons";
 import { SideBar } from "./SideBar/SideBar";
 import { Header } from "./Header/Header";
 import { Content } from "./Content/Content";
-import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Router } from "../router/router";
 import { userApi } from "../api/userApi";
+import { toast } from "react-toastify";
 
 const LayoutWrapper = () => {
 	const navigate = useNavigate();
@@ -140,7 +136,6 @@ const LayoutWrapper = () => {
 					}}
 					className="layoutWrapperComponent"
 				>
-					<ToastContainer />
 					<SideBar />
 					<Layout className="site-layout">
 						<Header />

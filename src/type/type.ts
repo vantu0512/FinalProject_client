@@ -31,14 +31,14 @@ export type ProductType = {
 	datePublish?: string;
 };
 
+export type CategoryType = {
+	categoryId?: string;
+	categoryName?: string;
+};
+
 export type TokenType = {
 	accessToken: string;
 	refreshToken: string;
-};
-
-export type CategoryType = {
-	categoryId: string;
-	categoryName: string;
 };
 
 export type RouteApp = {

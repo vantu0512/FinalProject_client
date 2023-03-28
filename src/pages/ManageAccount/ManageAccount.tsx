@@ -127,8 +127,6 @@ export const ManageAccount = (): React.ReactElement => {
 					const params = {
 						id,
 					};
-					console.log(id);
-
 					const res = await userApi.delete(params);
 					if (res && res.status === 200) {
 						toast.success(res.data.message);
@@ -151,8 +149,6 @@ export const ManageAccount = (): React.ReactElement => {
 	const handleClose = () => {
 		setIsOpenModal(false);
 	};
-
-	console.log("render");
 
 	return (
 		<div className="manage-account">

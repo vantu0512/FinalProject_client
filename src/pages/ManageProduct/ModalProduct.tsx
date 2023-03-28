@@ -9,7 +9,7 @@ import {
 } from "antd";
 import "../../asset/style/ModalProduct.scss";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { storage } from "../../firebaseConfig";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
@@ -18,7 +18,9 @@ import { categoryApi } from "../../api/categoryApi";
 import { CONSTANT } from "../../constant/constant";
 import { SearchParams } from "../../type/common";
 import { ProductType } from "../../type/type";
-import moment from "moment";
+import dayjs from "dayjs";
+import locale from "antd/es/date-picker/locale/en_US";
+import { toast } from "react-toastify";
 
 type Props = {
 	handleClose: () => void;
@@ -39,7 +41,6 @@ export const ModalProduct = ({
 	dataToModal,
 }: Props): React.ReactElement => {
 	const [form] = Form.useForm();
-	const navigate = useNavigate();
 	const [selectedFile, setSelectedFile] = useState<any>();
 	const [preview, setPreview] = useState<string>();
 	const [searchParams] = useSearchParams();
@@ -71,7 +72,10 @@ export const ModalProduct = ({
 		form.setFieldValue("categoryName", data.categoryName);
 		form.setFieldValue("description", data.description);
 		form.setFieldValue("price", data.price);
-		// form.setFieldValue("datePublish", data.datePublish);
+		form.setFieldValue(
+			"datePublish",
+			dayjs(data.datePublish, CONSTANT.FORMAT_DATE),
+		);
 		setPreview(data.imgUrl);
 	};
 
@@ -122,24 +126,25 @@ export const ModalProduct = ({
 			const imgUrl = await uploadImage();
 			const data = {
 				...values,
-				datePublish: moment(values.datePublish).format(
+				datePublish: dayjs(values.datePublish).format(
 					CONSTANT.FORMAT_DATE,
 				),
 				imgUrl: `${imgUrl}`,
 			};
-			console.log("ok: ", data);
 
 			if (typeModal === "add") await productApi.add(data);
 			else {
 				data._id = dataToModal._id;
-				await productApi.update(data);
+				const res = await productApi.update(data);
+				if (res?.data) toast.success(res.data.errMessage);
 			}
 			handleClose();
-			await getAllProduct({
+			const res = await getAllProduct({
 				page,
 				size,
 				keyword,
 			});
+			if (res?.data) toast.success(res.data.errMessage);
 		} catch (error) {
 			console.log("err: ", error);
 		}
@@ -226,7 +231,7 @@ export const ModalProduct = ({
 						},
 					]}
 				>
-					<DatePicker />
+					<DatePicker locale={locale} format={CONSTANT.FORMAT_DATE} />
 				</Form.Item>
 			</Form>
 			<div className="upload">
@@ -252,12 +257,12 @@ export const ModalProduct = ({
 				type="primary"
 				style={{ width: 100, marginTop: 32 }}
 			>
-				Thêm
+				{typeModal === "edit" ? "Save" : "Thêm"}
 			</Button>
 			<Button
 				style={{ width: 100, marginTop: 32, marginLeft: 16 }}
 				onClick={() => {
-					navigate("/");
+					handleClose();
 				}}
 			>
 				Hủy

@@ -1,8 +1,9 @@
+import { CartType } from "../type/type";
 import axiosConfig from "./axiosConfig";
 
 export const cartApi = {
-	getAll: (userName: any) =>
-		axiosConfig.get(`/get-all-cart?userName=${userName}`),
-	create: (body: any) => axiosConfig.post("/add-to-cart", body),
-	delete: (body: any) => axiosConfig.delete("/remove-from-cart", body),
+	getAll: (params: any) => axiosConfig.get("/get-all-cart", { params }),
+	addToCart: (data: CartType) => axiosConfig.post("/add-to-cart", data),
+	removeFromCart: (params: any) =>
+		axiosConfig.delete("/remove-from-cart", { params }),
 };

@@ -31,7 +31,6 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({
 	const onChange = (imageList: ImageListType) => {
 		onChangePickAvatar && onChangePickAvatar(imageList[0]);
 		// data for submit
-		// console.log(imageList, addUpdateIndex);
 		setImages(imageList as never[]);
 	};
 

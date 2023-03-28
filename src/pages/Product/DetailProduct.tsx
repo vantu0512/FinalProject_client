@@ -18,7 +18,6 @@ export const DetailProduct = (): React.ReactElement => {
 	const user = JSON.parse(localStorage.getItem("user") || "{}");
 	const email = user.email;
 	const dispatch: AppDispatch = useDispatch();
-	console.log(detailProduct);
 
 	useEffect(() => {
 		params?.id && handleGetDetailProduct(params.id);
@@ -50,7 +49,6 @@ export const DetailProduct = (): React.ReactElement => {
 				price: detailProduct?.price,
 				quantity: quantity,
 			};
-			console.log(data);
 			await dispatch(cartAction.addToCart(data));
 		} catch (e) {
 			console.log("error: ", e);
