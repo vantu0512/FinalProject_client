@@ -18,6 +18,7 @@ export type UserType = {
 	address?: string;
 	accessToken?: string;
 	refreshToken?: string;
+	isBlock?: boolean;
 };
 
 export type ProductType = {

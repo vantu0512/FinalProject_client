@@ -1,7 +1,7 @@
 import "../../asset/style/ManageAccount.scss";
 import { Button, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, LockOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { userApi } from "../../api/userApi";
 import { ModalAccount } from "./ModalAccount";
@@ -36,13 +36,11 @@ export const ManageAccount = (): React.ReactElement => {
 		},
 		{
 			fixed: true,
-
 			title: "Role",
 			dataIndex: "role",
 		},
 		{
 			fixed: true,
-
 			title: "Address",
 			dataIndex: "address",
 		},
@@ -52,6 +50,20 @@ export const ManageAccount = (): React.ReactElement => {
 			title: "Chức năng",
 			render: (record) => (
 				<>
+					<span
+						style={{
+							marginLeft: 8,
+							cursor: "pointer",
+							color: record?.isBlock ? "green" : "red",
+							fontSize: 16,
+						}}
+					>
+						<LockOutlined
+							onClick={() =>
+								handleBlockUser(record?.email, record?.isBlock)
+							}
+						/>
+					</span>
 					<span
 						style={{
 							marginLeft: 8,
@@ -114,6 +126,7 @@ export const ManageAccount = (): React.ReactElement => {
 				fullName: item.fullName,
 				role: item.role,
 				address: item.address,
+				isBlock: item.isBlock,
 			};
 		});
 		return arr;
@@ -143,6 +156,37 @@ export const ManageAccount = (): React.ReactElement => {
 			description: "Dữ liệu người dùng này sẽ bị xóa vĩnh viễn",
 			canceText: `Hủy bỏ`,
 			okText: "Xóa",
+		});
+	};
+
+	const handleBlockUser = (email: string, isBlock: boolean) => {
+		ConfirmModal({
+			icon: <></>,
+			onOk: async () => {
+				try {
+					const data = {
+						email,
+						isBlock: !isBlock,
+					};
+					const res = await userApi.blockUser(data);
+					if (res && res.status === 200) {
+						toast.success(res.data.message);
+						await handleGetAllUser({ page, size });
+					}
+				} catch (error: any) {
+					console.log(error);
+					toast.error(error?.response?.data?.message);
+				}
+			},
+			className: "confirm__modal",
+			title: isBlock
+				? "Mở khóa quyền truy cập tài khoản?"
+				: "Chặn quyền truy cập tài khoản?",
+			description: isBlock
+				? "Người dùng sẽ đăng nhập tài khoản trở lại!"
+				: "Người dùng sẽ không thể đăng nhập vào tài khoản!",
+			canceText: `Hủy bỏ`,
+			okText: isBlock ? "Bỏ chặn" : "Chặn",
 		});
 	};
 

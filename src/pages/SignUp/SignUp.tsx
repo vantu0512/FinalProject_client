@@ -4,6 +4,7 @@ import img from "../../asset/image/library.png";
 import loginIcon from "../../asset/image/login.png";
 import { userApi } from "../../api/userApi";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export const SignUp = (): React.ReactElement => {
 	const [loginForm] = Form.useForm();
@@ -22,7 +23,7 @@ export const SignUp = (): React.ReactElement => {
 				email: values.email,
 				password: values.password,
 			});
-			if (res) {
+			if (res?.data?.errCode === 0) {
 				const data = {
 					email: res.data.userInfor.email,
 					role: res.data.userInfor.role,
@@ -32,6 +33,8 @@ export const SignUp = (): React.ReactElement => {
 				localStorage.setItem("user", JSON.stringify(data));
 				if (data.role === "user") navigate("/");
 				if (data.role === "admin") navigate("/manage-account");
+			} else {
+				toast.error(res?.data?.errMessage);
 			}
 		} catch (e) {
 			console.log(e);
