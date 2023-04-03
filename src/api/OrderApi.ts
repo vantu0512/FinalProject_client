@@ -5,4 +5,5 @@ export const orderApi = {
 	add: (body: any) => axiosConfig.post("/add-order", body),
 	edit: (body: any) => axiosConfig.post("/edit-order", body),
 	delete: (params: any) => axiosConfig.delete("/remove-order", { params }),
+	checkout: (body: any) => axiosConfig.post("/order-checkout", body),
 };

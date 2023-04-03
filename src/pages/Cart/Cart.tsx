@@ -7,6 +7,8 @@ import { CloseOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { cartAction } from "../../store/action/cartAction";
 import { AppDispatch, RootState } from "../../store/store";
 import { CartType } from "../../type/type";
+import StripeButton from "../Payment/Payment";
+import { orderApi } from "../../api/OrderApi";
 
 export const Cart = () => {
 	const navigate = useNavigate();
@@ -17,6 +19,27 @@ export const Cart = () => {
 		(state: RootState) => state.cartReducer.arrProduct,
 	);
 	const [subTotal, setSubTotal] = useState<number>();
+	const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+	useEffect(() => {
+		// Update network status
+		const handleStatusChange = () => {
+			setIsOnline(navigator.onLine);
+		};
+
+		// Listen to the online status
+		window.addEventListener("online", handleStatusChange);
+
+		// Listen to the offline status
+		window.addEventListener("offline", handleStatusChange);
+
+		// Specify how to clean up after this effect for performance improvment
+		return () => {
+			window.removeEventListener("online", handleStatusChange);
+			window.removeEventListener("offline", handleStatusChange);
+		};
+	}, [isOnline]);
+
 	useEffect(() => {
 		handleGetAllCart(email);
 	}, []);
@@ -62,12 +85,27 @@ export const Cart = () => {
 	};
 
 	const handleCalculateSubTotal = (data: any[]) => {
-		console.log(data[0].price * data[0].quantity);
 		let total: any = 0;
 		data.forEach((item) => {
 			total += item?.price * item?.quantity;
 		});
 		setSubTotal(total);
+	};
+
+	const submitHandler = async (token: any) => {
+		console.log("submit: ", token);
+
+		const orderInfor = {
+			cartId: "6424633274ac4508ed41b463",
+		};
+
+		try {
+			console.log("here");
+			const res = await orderApi.checkout(orderInfor);
+			if (res) console.log("result: ", res);
+		} catch (error) {
+			console.log("err:", error);
+		}
 	};
 
 	return (
@@ -77,8 +115,6 @@ export const Cart = () => {
 					<div className="cart-list">
 						{listProduct && listProduct.length > 0 ? (
 							listProduct.map((item) => {
-								console.log("item: ", item);
-
 								return (
 									<div className="cart-item">
 										<div className="cart-left">
@@ -161,19 +197,30 @@ export const Cart = () => {
 						<div className="summary-detail ">
 							<div className="summary-detail-item summary-sub-total">
 								<label>Sub total:</label>
-								<span>{subTotal}</span>
+								<span>{`${subTotal} VNĐ`}</span>
 							</div>
 							<div className="summary-detail-item summary-shipping">
 								<label>Shipping:</label>
-								<span>123</span>
+								<span>20000 VNĐ</span>
 							</div>
 							<div className="summary-detail-item summary-pay-method">
 								<label>Pay method:</label>
 								<span>Momo</span>
 							</div>
-							<div className="summary-total">12312312VND</div>
+							<div className="summary-total">
+								{`${subTotal && subTotal + 20000} VNĐ`}
+							</div>
 						</div>
-						<div className="summary-payment">Thanh toán</div>
+						<div className="summary-payment">
+							{isOnline && (
+								<StripeButton
+									price={subTotal && subTotal + 20000}
+									email={email ?? ""}
+									disabled={subTotal === 0 ? true : false}
+									callbackFn={submitHandler}
+								/>
+							)}
+						</div>
 					</div>
 				</Col>
 			</Row>

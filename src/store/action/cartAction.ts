@@ -25,6 +25,10 @@ const getAllCart = (email: string) => {
 				type: actionType.GET_ALL_CART,
 				payload: arrProduct,
 			});
+			await dispatch({
+				type: actionType.GET_CART_ID,
+				payload: arrData[0]?._id,
+			});
 		}
 	};
 };

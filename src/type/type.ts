@@ -37,6 +37,12 @@ export type CategoryType = {
 	categoryName?: string;
 };
 
+export type OrderType = {
+	cartId: string;
+	receiveAddress: string;
+	isPurchase: boolean;
+};
+
 export type TokenType = {
 	accessToken: string;
 	refreshToken: string;
@@ -46,30 +52,4 @@ export type RouteApp = {
 	href: string;
 	isPublic: boolean;
 	element: JSX.Element;
-};
-
-export type DataTypeProDuct = {
-	key: string;
-	name: string;
-	brand: string;
-	thumbnail_url: string;
-	quantity?: number;
-	sold?: number;
-	description?: string;
-	specifications?: string;
-	sale_percent?: number;
-	price: number;
-	type: number;
-};
-
-export type DataTypeStaff = {
-	key: string;
-	nick_name: string;
-	birthday?: Date;
-	address?: string;
-	phone_number?: string;
-	avatar_url?: string;
-	gender?: number;
-	email?: string;
-	username: string;
 };

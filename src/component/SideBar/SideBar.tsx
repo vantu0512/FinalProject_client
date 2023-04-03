@@ -5,7 +5,6 @@ import {
 	LogoutOutlined,
 	ProfileOutlined,
 	WalletOutlined,
-	UserSwitchOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import { useMemo } from "react";
@@ -26,12 +25,11 @@ function getItem(label: string, key: string, icon?: any, children?: any) {
 }
 const items: any = [
 	getItem("Quản lý tài khoản", "1", <UserOutlined />),
-	getItem("Quản lý quyền truy cập", "2", <UserSwitchOutlined />),
-	getItem("Quản lý sản phẩm", "3", <WalletOutlined />),
-	getItem("Quản lý danh mục sản phẩm", "4", <ProfileOutlined />),
-	getItem("Quản lý đơn hàng", "5", <PayCircleOutlined />),
-	getItem("Quản lý tin tức", "6", <FundOutlined />),
-	getItem("Quản lý trang", "7", <ProfileOutlined />),
+	getItem("Quản lý sản phẩm", "2", <WalletOutlined />),
+	getItem("Quản lý danh mục sản phẩm", "3", <ProfileOutlined />),
+	getItem("Quản lý đơn hàng", "4", <PayCircleOutlined />),
+	getItem("Quản lý tin tức", "5", <FundOutlined />),
+	getItem("Quản lý trang", "6", <ProfileOutlined />),
 ];
 
 type ArrTabsType = {
@@ -48,31 +46,26 @@ const arrTabs: ArrTabsType[] = [
 	},
 	{
 		key: 2,
-		tabName: "Quản lý quyền truy cập",
-		url: "/manage-access-right",
-	},
-	{
-		key: 3,
 		tabName: "Quản lý sản phẩm",
 		url: "/manage-product",
 	},
 	{
-		key: 4,
+		key: 3,
 		tabName: "Quản lý danh mục sản phẩm",
 		url: "/manage-category",
 	},
 	{
-		key: 5,
+		key: 4,
 		tabName: "Quản lý nhà cung cấp",
 		url: "/manage-order",
 	},
 	{
-		key: 6,
+		key: 5,
 		tabName: "Quản lý sản phẩm",
 		url: "/manage-news",
 	},
 	{
-		key: 7,
+		key: 6,
 		tabName: "Quản lý trang",
 		url: "/manage-page",
 	},
