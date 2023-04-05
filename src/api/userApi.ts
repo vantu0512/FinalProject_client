@@ -10,5 +10,7 @@ export const userApi = {
 	edit: (body: UserType) => axiosConfig.put("/edit-user", body),
 	delete: (params: any) => axiosConfig.delete("/delete-user", { params }),
 	getAllUser: (params: any) => axiosConfig.get("/get-all-user", { params }),
+	getDetailUser: (params: any) =>
+		axiosConfig.get("/get-detail-user", { params }),
 	blockUser: (body: any) => axiosConfig.post("/block-user", body),
 };

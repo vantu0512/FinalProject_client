@@ -1,6 +1,6 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import { useNavigate } from "react-router-dom";
-import img from "../../asset/image/library.png";
+import img from "../../asset/image/shoeBG.jpg";
 import loginIcon from "../../asset/image/login.png";
 import { userApi } from "../../api/userApi";
 import { useEffect } from "react";
@@ -27,6 +27,7 @@ export const SignUp = (): React.ReactElement => {
 				const data = {
 					email: res.data.userInfor.email,
 					role: res.data.userInfor.role,
+					fullName: res.data.userInfor.fullName,
 					accessToken: res.data.accessToken,
 					refreshToken: res.data.refreshToken,
 				};

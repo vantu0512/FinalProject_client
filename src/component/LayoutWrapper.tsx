@@ -6,6 +6,9 @@ import {
 	ShopOutlined,
 	UserOutlined,
 	LogoutOutlined,
+	PhoneOutlined,
+	SnippetsOutlined,
+	ContactsOutlined,
 } from "@ant-design/icons";
 import { SideBar } from "./SideBar/SideBar";
 import { Header } from "./Header/Header";
@@ -22,6 +25,7 @@ const LayoutWrapper = () => {
 	const currentPath = location.pathname.split("/")[1];
 	const user = JSON.parse(localStorage.getItem("user") || "{}");
 	const role = user.role;
+	const userName = user.fullName;
 	const userAccessToken = user.accessToken;
 	const userRefreshToken = user.refreshToken;
 
@@ -72,28 +76,55 @@ const LayoutWrapper = () => {
 			key: 5,
 			label: (
 				<div>
-					<UserOutlined />
-					<span>Tài khoản</span>
+					<SnippetsOutlined />
+					<span>Tin tức</span>
 				</div>
 			),
-			url: "/account",
+			url: "/news",
+		},
+		{
+			key: 6,
+			label: (
+				<div>
+					<ContactsOutlined />
+					<span>Về chúng tôi</span>
+				</div>
+			),
+			url: "/page",
+		},
+
+		{
+			key: 7,
+			label: (
+				<div>
+					<PhoneOutlined />
+					<span>Liên hệ</span>
+				</div>
+			),
+			url: "/contact",
+		},
+		{
+			key: 8,
+			label: (
+				<div>
+					<span>{`Xin chào ${userName}`}</span>
+					<UserOutlined />
+				</div>
+			),
+			url: "/my-infor",
 			children: [
 				{
-					label: "Thông tin cá nhân",
-					key: "personal",
-				},
-				{
-					label: "Ảnh đại diện",
-					key: "avatar",
-				},
-				{
-					label: "Đổi mật khẩu",
-					key: "change-password",
+					label: (
+						<div onClick={() => navigate("/my-infor")}>
+							<UserOutlined />
+							<span>Thông tin cá nhân</span>
+						</div>
+					),
 				},
 			],
 		},
 		{
-			key: 6,
+			key: 9,
 			label: (
 				<div>
 					<LogoutOutlined />
@@ -104,10 +135,10 @@ const LayoutWrapper = () => {
 		},
 	];
 
-	const handleNavigate = (key: number) => {
+	const handleNavigateMenu = (key: number) => {
 		menu.forEach(async (item) => {
 			if (key == item.key) {
-				if (item.key == 6) {
+				if (item.key == 9) {
 					if (userAccessToken) {
 						try {
 							const res = await userApi.signOut({
@@ -149,15 +180,37 @@ const LayoutWrapper = () => {
 							currentPath !== "sign-up" && (
 								<Layout.Header style={{ padding: "0 40px" }}>
 									<div className="logo" />
-									<Menu
-										theme="light"
-										mode="horizontal"
-										defaultSelectedKeys={["1"]}
-										items={menu.map((item) => item)}
-										onClick={(value: any) =>
-											handleNavigate(value.key)
-										}
-									/>
+									<div className="header-menu">
+										<div className="menu-left">
+											<Menu
+												theme="light"
+												mode="horizontal"
+												defaultSelectedKeys={["1"]}
+												items={menu.map((item) =>
+													item.key < 8 ? item : null,
+												)}
+												onClick={(value: any) =>
+													handleNavigateMenu(
+														value.key,
+													)
+												}
+											/>
+										</div>
+										<div className="menu-right">
+											<Menu
+												theme="light"
+												mode="horizontal"
+												items={menu.map((item) =>
+													item.key >= 8 ? item : null,
+												)}
+												onClick={(value: any) =>
+													handleNavigateMenu(
+														value.key,
+													)
+												}
+											/>
+										</div>
+									</div>
 								</Layout.Header>
 							)}
 						<Layout.Content

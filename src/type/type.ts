@@ -16,6 +16,7 @@ export type UserType = {
 	role?: string;
 	fullName?: string;
 	address?: string;
+	avatar?: string;
 	accessToken?: string;
 	refreshToken?: string;
 	isBlock?: boolean;
@@ -38,9 +39,15 @@ export type CategoryType = {
 };
 
 export type OrderType = {
-	cartId: string;
-	receiveAddress: string;
-	isPurchase: boolean;
+	orderId?: string;
+	email?: string;
+	listProduct?: ProductType[];
+	totalCost?: number;
+	shipFee?: number;
+	paymentMethod?: string;
+	receiveAddress?: string;
+	isPurchase?: boolean;
+	createdAt?: string;
 };
 
 export type TokenType = {

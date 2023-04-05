@@ -1,13 +1,14 @@
-import { Col, Row } from "antd";
+import { Button, Col, Form, Input, Radio, Row, Space } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "../../asset/style/Cart.scss";
+import stripe from "../../asset/image/stripe.png";
 import { CloseOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { cartAction } from "../../store/action/cartAction";
 import { AppDispatch, RootState } from "../../store/store";
-import { CartType } from "../../type/type";
-import StripeButton from "../Payment/Payment";
+import { CartType, OrderType } from "../../type/type";
+import { paymentApi } from "../../api/PaymentApi";
 import { orderApi } from "../../api/OrderApi";
 
 export const Cart = () => {
@@ -20,6 +21,7 @@ export const Cart = () => {
 	);
 	const [subTotal, setSubTotal] = useState<number>();
 	const [isOnline, setIsOnline] = useState(navigator.onLine);
+	const [form] = Form.useForm();
 
 	useEffect(() => {
 		// Update network status
@@ -92,17 +94,27 @@ export const Cart = () => {
 		setSubTotal(total);
 	};
 
-	const submitHandler = async (token: any) => {
-		console.log("submit: ", token);
-
-		const orderInfor = {
-			cartId: "6424633274ac4508ed41b463",
+	const handleCheckoutStripe = async () => {
+		const orderInfor: OrderType = {
+			email: email,
+			totalCost: subTotal,
+			listProduct,
+			receiveAddress: form.getFieldValue("receiveAddress"),
+			paymentMethod: form.getFieldValue("paymentMethod"),
 		};
-
 		try {
-			console.log("here");
-			const res = await orderApi.checkout(orderInfor);
-			if (res) console.log("result: ", res);
+			const resAddOrder = await orderApi.add(orderInfor);
+			if (resAddOrder)
+				if (
+					orderInfor.paymentMethod &&
+					resAddOrder?.data?.errCode === 0
+				) {
+					orderInfor.orderId = resAddOrder.data?.data?._id;
+					const res = await paymentApi.checkout(orderInfor);
+					if (res?.data?.data?.url) {
+						window.location.replace(res.data.data.url);
+					}
+				}
 		} catch (error) {
 			console.log("err:", error);
 		}
@@ -196,30 +208,72 @@ export const Cart = () => {
 						<div className="summary-header">Order summary</div>
 						<div className="summary-detail ">
 							<div className="summary-detail-item summary-sub-total">
-								<label>Sub total:</label>
+								<label>Tổng thanh toán:</label>
 								<span>{`${subTotal} VNĐ`}</span>
 							</div>
-							<div className="summary-detail-item summary-shipping">
-								<label>Shipping:</label>
-								<span>20000 VNĐ</span>
-							</div>
-							<div className="summary-detail-item summary-pay-method">
-								<label>Pay method:</label>
-								<span>Momo</span>
-							</div>
-							<div className="summary-total">
-								{`${subTotal && subTotal + 20000} VNĐ`}
-							</div>
 						</div>
-						<div className="summary-payment">
-							{isOnline && (
-								<StripeButton
-									price={subTotal && subTotal + 20000}
-									email={email ?? ""}
-									disabled={subTotal === 0 ? true : false}
-									callbackFn={submitHandler}
-								/>
-							)}
+						<div className="form-payment">
+							<Form
+								layout="vertical"
+								form={form}
+								id="form-payment"
+								onFinish={handleCheckoutStripe}
+							>
+								<Form.Item
+									label="Địa chỉ nhận hàng"
+									name="receiveAddress"
+									labelAlign="left"
+									rules={[
+										{
+											required: true,
+
+											message:
+												"Vui lòng nhập địa chỉ nhận hàng!",
+										},
+									]}
+								>
+									<Input />
+								</Form.Item>
+
+								<Form.Item
+									label="Phương thức thanh toán"
+									name="paymentMethod"
+									labelAlign="left"
+									rules={[
+										{
+											required: true,
+											message:
+												"Vui lòng chọn phương thức thanh toán!",
+										},
+									]}
+								>
+									<Radio.Group>
+										<Space direction="vertical">
+											<Radio value={false}>
+												Thanh toán sau khi nhận hàng
+											</Radio>
+											<Radio value={true}>
+												<img
+													src={stripe}
+													style={{
+														width: 100,
+														objectFit: "cover",
+													}}
+												></img>
+											</Radio>
+										</Space>
+									</Radio.Group>
+								</Form.Item>
+								{isOnline && subTotal !== 0 && (
+									<Button
+										className="summary-payment"
+										form="form-payment"
+										htmlType="submit"
+									>
+										Thanh toán
+									</Button>
+								)}
+							</Form>
 						</div>
 					</div>
 				</Col>

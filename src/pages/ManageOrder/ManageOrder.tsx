@@ -1,11 +1,10 @@
 import "../../asset/style/ManageAccount.scss";
 import { Button, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { EditOutlined, DeleteOutlined, LockOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { userApi } from "../../api/userApi";
 import { ModalOrder } from "./ModalOrder";
-import { UserType } from "../../type/type";
+import { OrderType, UserType } from "../../type/type";
 import { CONSTANT } from "../../constant/constant";
 import { PaginationComponent } from "../../component/Pagination/PaginationComponent";
 import { useSearchParams } from "react-router-dom";
@@ -13,6 +12,8 @@ import { SearchParams } from "../../type/common";
 import { ConfirmModal } from "../../component/ConfirmModal/ConfirmModal";
 import { toast } from "react-toastify";
 import { SearchComponent } from "../../component/SearchComponent/SearchComponent";
+import { orderApi } from "../../api/OrderApi";
+import moment from "moment";
 export const ManageOrder = (): React.ReactElement => {
 	const [data, setData] = useState<UserType[]>([]);
 	const [dataToModal, setDataToModal] = useState<UserType>({});
@@ -22,7 +23,7 @@ export const ManageOrder = (): React.ReactElement => {
 	const page = searchParams.get("page") || CONSTANT.DEFAULT_PAGE;
 	const size = searchParams.get("size") || CONSTANT.DEFAULT_SIZE;
 	const keyword = searchParams.get("keyword") || CONSTANT.DEFAULT_KEYWORD;
-	const columns: ColumnsType<UserType> = [
+	const columns: ColumnsType<OrderType> = [
 		{
 			title: "Email",
 			dataIndex: "email",
@@ -31,39 +32,47 @@ export const ManageOrder = (): React.ReactElement => {
 		},
 		{
 			fixed: true,
-			title: "Full name",
-			dataIndex: "fullName",
+			title: "Thành tiền",
+			dataIndex: "totalCost",
+			render: (text) => <span>{text}</span>,
 		},
 		{
 			fixed: true,
-			title: "Role",
-			dataIndex: "role",
+			title: "Địa chỉ nhận hàng",
+			dataIndex: "receiveAddress",
+			render: (text) => <span>{text}</span>,
 		},
 		{
 			fixed: true,
-			title: "Address",
-			dataIndex: "address",
+			title: "Phương thức thanh toán",
+			dataIndex: "paymentMethod",
+			render: (text) => (
+				<span>
+					{text ? "Thanh toán online" : "Thanh toán sau khi nhận"}
+				</span>
+			),
 		},
 		{
 			fixed: true,
-
+			title: "Ngày đặt hàng",
+			dataIndex: "createdAt",
+			render: (text) => (
+				<span>{moment(text).format(CONSTANT.FORMAT_DATE_HOUR)}</span>
+			),
+		},
+		{
+			fixed: true,
+			title: "Trạng thái",
+			dataIndex: "isPurchase",
+			render: (text) => (
+				<span>{text ? "Đã thanh toán" : "Chưa thanh toán"}</span>
+			),
+		},
+		{
+			fixed: true,
 			title: "Chức năng",
 			render: (record) => (
 				<>
-					<span
-						style={{
-							marginLeft: 8,
-							cursor: "pointer",
-							color: record?.isBlock ? "green" : "red",
-							fontSize: 16,
-						}}
-					>
-						<LockOutlined
-							onClick={() =>
-								handleBlockUser(record?.email, record?.isBlock)
-							}
-						/>
-					</span>
 					<span
 						style={{
 							marginLeft: 8,
@@ -89,7 +98,12 @@ export const ManageOrder = (): React.ReactElement => {
 						}}
 					>
 						<DeleteOutlined
-							onClick={() => handleDeleteUser(record?._id)}
+							onClick={() =>
+								handleDeleteOrder(
+									record?.email,
+									record?.orderId,
+								)
+							}
 						/>
 					</span>
 				</>
@@ -97,17 +111,25 @@ export const ManageOrder = (): React.ReactElement => {
 		},
 	];
 
+	const handleCalculateSubTotal = (data: any[]) => {
+		let total: any = 0;
+		data.forEach((item) => {
+			total += item?.price * item?.quantity;
+		});
+		return total;
+	};
+
 	useEffect(() => {
-		handleGetAllUser({
+		handleGetAllOrder({
 			page,
 			size,
 			keyword,
 		});
 	}, [page, size, keyword]);
 
-	const handleGetAllUser = async (params: SearchParams): Promise<any> => {
+	const handleGetAllOrder = async (params: SearchParams): Promise<any> => {
 		try {
-			const res = await userApi.getAllUser(params);
+			const res = await orderApi.getAll(params);
 			if (res?.data?.data) {
 				const arr = handleFormatData(res.data.data);
 				setData(arr);
@@ -118,75 +140,44 @@ export const ManageOrder = (): React.ReactElement => {
 	};
 
 	const handleFormatData = (data: any) => {
-		const arr: UserType[] = data.map((item: any) => {
+		const arr: OrderType[] = data.map((item: any) => {
 			return {
-				_id: item._id,
-				userName: item.userName,
+				orderId: item._id,
 				email: item.email,
-				fullName: item.fullName,
-				role: item.role,
-				address: item.address,
-				isBlock: item.isBlock,
+				totalCost: handleCalculateSubTotal(item.listProduct),
+				receiveAddress: item.receiveAddress,
+				paymentMethod: item.paymentMethod,
+				isPurchase: item.isPurchase,
+				createdAt: item.createdAt,
 			};
 		});
 		return arr;
 	};
 
-	const handleDeleteUser = (id: string) => {
+	const handleDeleteOrder = (email: string, orderId: string) => {
 		ConfirmModal({
 			icon: <></>,
 			onOk: async () => {
 				try {
 					const params = {
-						id,
+						email,
+						orderId,
 					};
-					const res = await userApi.delete(params);
+					const res = await orderApi.delete(params);
 					if (res && res.status === 200) {
-						toast.success(res.data.message);
-						await handleGetAllUser({ page, size });
+						toast.success(res.data.errMessage);
+						await handleGetAllOrder({ page, size });
 					}
 				} catch (error: any) {
 					console.log(error);
-
 					toast.error(error.message);
 				}
 			},
 			className: "confirm__modal",
 			title: "Bạn có chắc muốn xóa không",
-			description: "Dữ liệu người dùng này sẽ bị xóa vĩnh viễn",
+			description: "Đơn hàng sẽ bị hủy!",
 			canceText: `Hủy bỏ`,
 			okText: "Xóa",
-		});
-	};
-
-	const handleBlockUser = (email: string, isBlock: boolean) => {
-		ConfirmModal({
-			icon: <></>,
-			onOk: async () => {
-				try {
-					const data = {
-						email,
-						isBlock: !isBlock,
-					};
-					const res = await userApi.blockUser(data);
-					if (res && res.status === 200) {
-						toast.success(res.data.message);
-						await handleGetAllUser({ page, size });
-					}
-				} catch (error: any) {
-					console.log(error);
-					toast.error(error?.response?.data?.message);
-				}
-			},
-			className: "confirm__modal",
-			title: isBlock
-				? "Mở khóa quyền truy cập tài khoản?"
-				: "Chặn quyền truy cập tài khoản?",
-			description: isBlock
-				? "Người dùng sẽ đăng nhập tài khoản trở lại!"
-				: "Người dùng sẽ không thể đăng nhập vào tài khoản!",
-			canceText: `Hủy bỏ`,
-			okText: isBlock ? "Bỏ chặn" : "Chặn",
 		});
 	};
 
@@ -215,7 +206,7 @@ export const ManageOrder = (): React.ReactElement => {
 						setTypeModal("add");
 					}}
 				>
-					Add account
+					Add order
 				</Button>
 			</div>
 			<div className="manage-account-table">
@@ -233,7 +224,7 @@ export const ManageOrder = (): React.ReactElement => {
 			{isOpenModal && (
 				<ModalOrder
 					handleClose={handleClose}
-					getAllUser={handleGetAllUser}
+					getAllOrder={handleGetAllOrder}
 					typeModal={typeModal}
 					dataToModal={dataToModal}
 				/>

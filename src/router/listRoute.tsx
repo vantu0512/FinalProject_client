@@ -11,6 +11,12 @@ import { ManageNews } from "../pages/ManageNew/ManageNews";
 import { ManagePage } from "../pages/ManagePage/ManagePage";
 import { DetailProduct } from "../pages/Product/DetailProduct";
 import { Cart } from "../pages/Cart/Cart";
+import { PaymentSuccess } from "../pages/Payment/PaymentSuccess";
+import { PaymentCancel } from "../pages/Payment/PaymentCancel";
+import { News } from "../pages/News/News";
+import { Page } from "../pages/Page/Page";
+import { Contact } from "../pages/Contact/Contact";
+import { MyInfor } from "../pages/MyInfor/MyInfor";
 
 export const adminRoute = [
 	{
@@ -45,12 +51,20 @@ export const adminRoute = [
 
 export const userRoute = [
 	{
-		url: "/user",
-		element: <ManageCategory />,
-	},
-	{
 		url: "/cart",
 		element: <Cart />,
+	},
+	{
+		url: "/my-infor",
+		element: <MyInfor />,
+	},
+	{
+		url: "/payment-success/:orderId",
+		element: <PaymentSuccess />,
+	},
+	{
+		url: "/payment-cancel/:orderId",
+		element: <PaymentCancel />,
 	},
 ];
 
@@ -67,6 +81,18 @@ export const publicRoute = [
 	{
 		url: "/detail-product/:id",
 		element: <DetailProduct />,
+	},
+	{
+		url: "/news",
+		element: <News />,
+	},
+	{
+		url: "/page",
+		element: <Page />,
+	},
+	{
+		url: "/contact",
+		element: <Contact />,
 	},
 	{
 		url: "/sign-in",

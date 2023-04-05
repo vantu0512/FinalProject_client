@@ -1,27 +1,23 @@
-import { Button, Form, Input, Modal, Select } from "antd";
+import { Button, Form, Input, Modal, Radio, Space } from "antd";
+import stripe from "../../asset/image/stripe.png";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { userApi } from "../../api/userApi";
 import { CONSTANT } from "../../constant/constant";
 import { SearchParams } from "../../type/common";
-import { UserType } from "../../type/type";
+import { OrderType } from "../../type/type";
+import { orderApi } from "../../api/OrderApi";
 
 type Props = {
 	handleClose: () => void;
-	getAllUser: (params: SearchParams) => Promise<any>;
+	getAllOrder: (params: SearchParams) => Promise<any>;
 	typeModal: string;
-	dataToModal: UserType;
-};
-
-type Option = {
-	label: string;
-	value: string;
+	dataToModal: OrderType;
 };
 
 export const ModalOrder = ({
 	handleClose,
-	getAllUser,
+	getAllOrder,
 	typeModal,
 	dataToModal,
 }: Props): React.ReactElement => {
@@ -29,47 +25,39 @@ export const ModalOrder = ({
 	const [searchParams] = useSearchParams();
 	const page = searchParams.get("page") || CONSTANT.DEFAULT_PAGE;
 	const size = searchParams.get("size") || CONSTANT.DEFAULT_SIZE;
-	const option: Option[] = [
-		{
-			label: "Admin",
-			value: "admin",
-		},
-		{
-			label: "User",
-			value: "user",
-		},
-	];
 
 	useEffect(() => {
 		if (typeModal === "edit") handleFillForm(dataToModal);
 	}, []);
 
-	const handleFillForm = (data: UserType) => {
+	const handleFillForm = (data: OrderType) => {
 		form.setFieldValue("email", data.email);
-		form.setFieldValue("role", data.role);
-		form.setFieldValue("fullName", data.fullName);
-		form.setFieldValue("address", data.address);
+		form.setFieldValue("receiveAddress", data.receiveAddress);
+		form.setFieldValue("paymentMethod", data.paymentMethod);
+		form.setFieldValue("totalCost", data.totalCost);
 	};
 
 	const onFinish = () => {
-		const data: UserType = {
+		const data: OrderType = {
 			email: form.getFieldValue("email"),
-			password: form.getFieldValue("password"),
-			role: form.getFieldValue("role"),
-			fullName: form.getFieldValue("fullName"),
-			address: form.getFieldValue("address"),
+			totalCost: form.getFieldValue("totalCost"),
+			receiveAddress: form.getFieldValue("receiveAddress"),
+			paymentMethod: form.getFieldValue("paymentMethod"),
 		};
-		if (typeModal === "add") handleAddAccount(data);
-		else handleEditAccount(data);
+		if (typeModal === "add") handleAddOrder(data);
+		else {
+			data.orderId = dataToModal.orderId;
+			handleEditOrder(data);
+		}
 	};
 
-	const handleAddAccount = async (user: UserType): Promise<any> => {
+	const handleAddOrder = async (order: OrderType): Promise<any> => {
 		try {
-			const res = await userApi.add(user);
+			const res = await orderApi.add(order);
 			if (res?.data) {
 				if (res.data.errCode === 0) {
 					toast.success(res.data.errMessage);
-					await getAllUser({ page, size });
+					await getAllOrder({ page, size });
 				}
 				if (res.data.errCode === 1) toast.error(res.data.errMessage);
 			}
@@ -80,13 +68,13 @@ export const ModalOrder = ({
 		}
 	};
 
-	const handleEditAccount = async (user: UserType): Promise<any> => {
+	const handleEditOrder = async (order: OrderType): Promise<any> => {
 		try {
-			const res = await userApi.edit(user);
+			const res = await orderApi.edit(order);
 			if (res?.data) {
 				if (res.data.errCode === 0) {
 					toast.success(res.data.errMessage);
-					await getAllUser({ page, size });
+					await getAllOrder({ page, size });
 				}
 				if (res.data.errCode === 1) toast.error(res.data.errMessage);
 			}
@@ -101,14 +89,13 @@ export const ModalOrder = ({
 		<>
 			<Modal
 				title={
-					typeModal === "edit"
-						? "Chỉnh sửa tài khoản"
-						: "Tạo tài khoản"
+					typeModal === "edit" ? "Chỉnh sửa đơn hàng" : "Tạo đơn hàng"
 				}
 				open={true}
 				onOk={handleClose}
 				onCancel={handleClose}
 				footer={null}
+				width={600}
 			>
 				<Form
 					style={{ padding: "15px 0" }}
@@ -137,30 +124,23 @@ export const ModalOrder = ({
 					>
 						<Input disabled={typeModal === "edit" ? true : false} />
 					</Form.Item>
-					{typeModal === "add" && (
+					{/* {typeModal === "edit" && (
 						<Form.Item
-							label="Password"
-							name="password"
+							label="Thành tiền"
+							name="totalCost"
 							rules={[
 								{
 									required: true,
-									message: "Không được để trống",
-								},
-								{
-									pattern: new RegExp(
-										/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/,
-									),
-									message:
-										"Mật khẩu gồm chữ hoa chữ thường và số, tối thiểu 8 ký tự",
+									message: "Không được để trống !",
 								},
 							]}
 						>
 							<Input />
 						</Form.Item>
-					)}
+					)} */}
 					<Form.Item
-						label="Họ và tên"
-						name="fullName"
+						label="Phương thức thanh toán"
+						name="paymentMethod"
 						rules={[
 							{
 								required: true,
@@ -168,20 +148,26 @@ export const ModalOrder = ({
 							},
 						]}
 					>
-						<Input />
+						<Radio.Group>
+							<Space direction="vertical">
+								<Radio value={false}>
+									Thanh toán sau khi nhận hàng
+								</Radio>
+								<Radio value={true}>
+									<img
+										src={stripe}
+										style={{
+											width: 100,
+											objectFit: "cover",
+										}}
+									></img>
+								</Radio>
+							</Space>
+						</Radio.Group>
 					</Form.Item>
 					<Form.Item
-						label="Chức vụ"
-						name="role"
-						rules={[
-							{ required: true, message: "Không được để trống" },
-						]}
-					>
-						<Select options={option} />
-					</Form.Item>
-					<Form.Item
-						label="Địa chỉ"
-						name="address"
+						label="Địa chỉ nhận hàng"
+						name="receiveAddress"
 						rules={[
 							{ required: true, message: "Không được để trống" },
 						]}
