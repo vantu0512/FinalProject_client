@@ -1,13 +1,16 @@
+import { UserType } from "../../type/type";
 import { actionType } from "../action/actionType";
 
 export type CommonReducer = {
 	curentTab?: string;
 	currentTabKey?: number;
+	userInfo?: UserType | null;
 };
 
 const initialState: CommonReducer = {
 	currentTabKey: 1,
-	curentTab: "Thống kê",
+	curentTab: "Quản lý tài khoản",
+	userInfo: null,
 };
 
 export const commonReducer = (
@@ -20,6 +23,11 @@ export const commonReducer = (
 				...state,
 				currentTabKey: action.payload.key,
 				curentTab: action.payload.name,
+			};
+		case actionType.CHANGE_USER_INFO:
+			return {
+				...state,
+				userInfo: action.payload,
 			};
 		default:
 			return state;

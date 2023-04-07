@@ -10,6 +10,8 @@ import { AppDispatch, RootState } from "../../store/store";
 import { CartType, OrderType } from "../../type/type";
 import { paymentApi } from "../../api/PaymentApi";
 import { orderApi } from "../../api/OrderApi";
+import { cartApi } from "../../api/cartApi";
+import { toast } from "react-toastify";
 
 export const Cart = () => {
 	const navigate = useNavigate();
@@ -114,9 +116,25 @@ export const Cart = () => {
 					if (res?.data?.data?.url) {
 						window.location.replace(res.data.data.url);
 					}
+				} else {
+					await handleDeleteAllCart();
+					await handleGetAllCart(email);
+					toast.success(resAddOrder?.data?.errMessage);
 				}
 		} catch (error) {
 			console.log("err:", error);
+		}
+	};
+
+	const handleDeleteAllCart = async (): Promise<any> => {
+		try {
+			const params = {
+				email,
+			};
+			const res = await cartApi.deleteAllCart(params);
+			if (res) console.log("delete all cart: ", res?.data);
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -143,7 +161,7 @@ export const Cart = () => {
 										</div>
 										<div className="cart-mid">
 											<span>{item?.productName}</span>
-											<span>{item?.price} VNĐ</span>
+											<span>{item?.price} $</span>
 											<div className="quantity">
 												<div className="quantity-minus">
 													<MinusOutlined
@@ -178,8 +196,7 @@ export const Cart = () => {
 												</div>
 											</div>
 											<span>
-												{item?.price * item?.quantity}{" "}
-												VNĐ
+												{item?.price * item?.quantity} $
 											</span>
 										</div>
 										<div className="cart-right">
@@ -209,7 +226,7 @@ export const Cart = () => {
 						<div className="summary-detail ">
 							<div className="summary-detail-item summary-sub-total">
 								<label>Tổng thanh toán:</label>
-								<span>{`${subTotal} VNĐ`}</span>
+								<span>{`${subTotal} $`}</span>
 							</div>
 						</div>
 						<div className="form-payment">

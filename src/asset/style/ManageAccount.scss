@@ -13,6 +13,18 @@
 
         .table-content{
             min-height: 300px;
+            overflow-y: scroll;
+            .ant-table{
+                .mark-down{
+                    display: inline-block;
+                    height: 64px;
+                    overflow-y: scroll;
+                }
+                .mark-down::-webkit-scrollbar {
+                    width: 0px;
+                    background: transparent; 
+                } 
+            }
         }
 
         .table-pagination{

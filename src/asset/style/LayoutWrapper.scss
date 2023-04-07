@@ -33,6 +33,14 @@
         }
     }
     .ant-layout-content{
-        min-height: 82vh;
+        min-height: 86vh;
+        overflow-y: hidden;
+    }
+}
+
+.layout-admin{
+    .ant-layout-content{
+        height: 100vh;
+        overflow-y: hidden;
     }
 }

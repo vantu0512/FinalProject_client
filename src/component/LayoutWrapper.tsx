@@ -18,6 +18,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Router } from "../router/router";
 import { userApi } from "../api/userApi";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 const LayoutWrapper = () => {
 	const navigate = useNavigate();
@@ -25,9 +27,11 @@ const LayoutWrapper = () => {
 	const currentPath = location.pathname.split("/")[1];
 	const user = JSON.parse(localStorage.getItem("user") || "{}");
 	const role = user.role;
-	const userName = user.fullName;
 	const userAccessToken = user.accessToken;
 	const userRefreshToken = user.refreshToken;
+	const userInfor = useSelector(
+		(state: RootState) => state.commonReducer.userInfo,
+	);
 
 	const {
 		token: { colorBgContainer },
@@ -76,21 +80,21 @@ const LayoutWrapper = () => {
 			key: 5,
 			label: (
 				<div>
-					<SnippetsOutlined />
-					<span>Tin tức</span>
-				</div>
-			),
-			url: "/news",
-		},
-		{
-			key: 6,
-			label: (
-				<div>
 					<ContactsOutlined />
 					<span>Về chúng tôi</span>
 				</div>
 			),
 			url: "/page",
+		},
+		{
+			key: 6,
+			label: (
+				<div>
+					<SnippetsOutlined />
+					<span>Tin tức</span>
+				</div>
+			),
+			url: "/news",
 		},
 
 		{
@@ -105,10 +109,19 @@ const LayoutWrapper = () => {
 		},
 		{
 			key: 8,
-			label: (
-				<div>
-					<span>{`Xin chào ${userName}`}</span>
-					<UserOutlined />
+			label: user.accessToken && (
+				<div style={{ display: "flex", alignItems: "center" }}>
+					<img
+						src={userInfor?.avatar}
+						style={{
+							width: 32,
+							height: 32,
+							objectFit: "cover",
+							borderRadius: "50%",
+							marginRight: 8,
+						}}
+					/>
+					<span>{userInfor?.fullName}</span>
 				</div>
 			),
 			url: "/my-infor",
@@ -165,7 +178,7 @@ const LayoutWrapper = () => {
 					style={{
 						height: "100vh",
 					}}
-					className="layoutWrapperComponent"
+					className="layoutWrapperComponent layout-admin"
 				>
 					<SideBar />
 					<Layout className="site-layout">
@@ -215,9 +228,14 @@ const LayoutWrapper = () => {
 							)}
 						<Layout.Content
 							style={{
-								marginTop: currentPath !== "sign-in" ? 64 : 0,
+								marginTop:
+									currentPath !== "sign-in" &&
+									currentPath !== "sign-up"
+										? 64
+										: 0,
 								padding:
-									currentPath !== "sign-in"
+									currentPath !== "sign-in" &&
+									currentPath !== "sign-up"
 										? "0 40px"
 										: "0px",
 								backgroundColor: "#FFFFFF",

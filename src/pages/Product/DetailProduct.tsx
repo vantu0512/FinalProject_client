@@ -1,11 +1,8 @@
-import { Button, Card, InputNumber } from "antd";
+import { Button, InputNumber } from "antd";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "../../asset/style/DetailProduct.scss";
 import { cartAction } from "../../store/action/cartAction";
-// import { Comment } from "./Comment";
-// import { Assessment } from "./Assessment";
-// import moment from "moment";
 import { productApi } from "../../api/productApi";
 import { AppDispatch } from "../../store/store";
 import { useDispatch } from "react-redux";
@@ -18,6 +15,7 @@ export const DetailProduct = (): React.ReactElement => {
 	const user = JSON.parse(localStorage.getItem("user") || "{}");
 	const email = user.email;
 	const dispatch: AppDispatch = useDispatch();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		params?.id && handleGetDetailProduct(params.id);
@@ -59,25 +57,19 @@ export const DetailProduct = (): React.ReactElement => {
 		<>
 			<div className="detailProductUser">
 				<div className="bookInfor">
-					<Card
-						bordered={false}
-						style={{
-							width: "40%",
-							height: 400,
-							border: "1px solid rgba(50,100,100,0.1)",
-						}}
-					>
-						<img
-							src={detailProduct?.imgUrl}
-							alt=""
-							className="bookImg"
-						/>
-					</Card>
+					<img src={detailProduct?.imgUrl} alt="" className="img" />
+
 					<div className="bookDetailInfor">
 						<h3 className="title">{detailProduct?.productName}</h3>
-						<p className="author">{detailProduct?.description}</p>
-						<p>Ngày ra mắt: {detailProduct?.datePublish}</p>
-						<p>Danh mục sản phẩm: {detailProduct?.categoryName}</p>
+						<p className="author">
+							Mô tả: {detailProduct?.description}
+						</p>
+						<p className="category">
+							Danh mục sản phẩm: {detailProduct?.categoryName}
+						</p>
+						<p className="date">
+							Ngày ra mắt: {detailProduct?.datePublish}
+						</p>
 						<p className="price">{`Đơn giá: ${detailProduct?.price}`}</p>
 						<div className="quantity">
 							<label>Số lượng mua:</label>
@@ -90,19 +82,20 @@ export const DetailProduct = (): React.ReactElement => {
 						</div>
 						<p className="totalCost">{`Thành tiền: ${
 							detailProduct?.price * quantity
-						} VNĐ`}</p>
+						} $`}</p>
 						<Button
 							type="primary"
 							style={{ width: "100%", height: 40, marginTop: 80 }}
-							onClick={handleAddToCart}
+							onClick={() => {
+								handleAddToCart();
+								navigate("/product");
+							}}
 						>
 							Thêm vào giỏ hàng
 						</Button>
 					</div>
 				</div>
-				<div className="bookComment">
-					{/* <Comment email={email} bookId={params.id} /> */}
-				</div>
+				<div className="bookComment"></div>
 			</div>
 		</>
 	);

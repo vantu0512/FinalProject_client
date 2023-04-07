@@ -50,6 +50,14 @@ export type OrderType = {
 	createdAt?: string;
 };
 
+export type NewsType = {
+	id?: string;
+	name?: string;
+	description?: string;
+	contentMarkdown?: string;
+	contentHTML?: string;
+};
+
 export type TokenType = {
 	accessToken: string;
 	refreshToken: string;

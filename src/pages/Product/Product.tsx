@@ -1,12 +1,13 @@
 import { Card, Col, Row } from "antd";
 import { useEffect, useState } from "react";
 import Meta from "antd/es/card/Meta";
-import "../../asset/style/Home.scss";
+import "../../asset/style/Product.scss";
 import { ProductType } from "../../type/type";
 import { CONSTANT } from "../../constant/constant";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { productApi } from "../../api/productApi";
 import { SearchParams } from "../../type/common";
+import { FilterComponent } from "./FilterComponent";
 export const Product = (): React.ReactElement => {
 	const navigate = useNavigate();
 	const [data, setData] = useState<ProductType[]>([]);
@@ -14,14 +15,16 @@ export const Product = (): React.ReactElement => {
 	const page = searchParams.get("page") || CONSTANT.DEFAULT_PAGE;
 	const size = searchParams.get("size") || CONSTANT.DEFAULT_SIZE;
 	const keyword = searchParams.get("keyword") || CONSTANT.DEFAULT_KEYWORD;
+	const filter = searchParams.get("filter") || CONSTANT.DEFAULT_FILTER;
 
 	useEffect(() => {
 		handleGetAllProduct({
 			page,
 			size,
 			keyword,
+			filter,
 		});
-	}, [page, size, keyword]);
+	}, [page, size, keyword, filter]);
 
 	const handleGetAllProduct = async (params: SearchParams): Promise<any> => {
 		try {
@@ -51,128 +54,47 @@ export const Product = (): React.ReactElement => {
 	};
 
 	return (
-		<>
-			<div className="home">
-				<div className="trending">
-					<div className="trending-title">Addidas</div>
+		<div className="product-page">
+			<div className="filter">
+				<FilterComponent />
+			</div>
+			<div className="product">
+				<div className="category">
 					<Row>
 						{data &&
 							data.map((item: ProductType) => {
 								return (
-									item?.categoryName === "Adidas" && (
-										<Col span={8}>
-											<Card
-												className="trending-item"
-												hoverable
-												cover={
-													<img
-														style={{
-															height: 400,
-															objectFit: "cover",
-														}}
-														alt="example"
-														src={item?.imgUrl}
-													/>
-												}
-												onClick={() => {
-													navigate(
-														`/detail-product/${item._id}`,
-													);
-												}}
-											>
-												<Meta
-													title={item?.productName}
-													description={
-														item?.description
-													}
+									<Col span={6}>
+										<Card
+											className="item"
+											hoverable
+											cover={
+												<img
+													style={{
+														height: 300,
+														objectFit: "cover",
+													}}
+													alt="example"
+													src={item?.imgUrl}
 												/>
-											</Card>
-										</Col>
-									)
+											}
+											onClick={() => {
+												navigate(
+													`/detail-product/${item._id}`,
+												);
+											}}
+										>
+											<Meta
+												title={item?.productName}
+												description={item?.description}
+											/>
+										</Card>
+									</Col>
 								);
 							})}
-					</Row>
-				</div>
-				<div className="trending">
-					<div className="trending-title">Nike</div>
-					<Row>
-						{data &&
-							data.map((item: ProductType) => {
-								return (
-									item?.categoryName === "Nike" && (
-										<Col span={8}>
-											<Card
-												className="trending-item"
-												hoverable
-												cover={
-													<img
-														style={{
-															height: 400,
-															objectFit: "cover",
-														}}
-														alt="example"
-														src={item?.imgUrl}
-													/>
-												}
-												onClick={() => {
-													navigate(
-														`/detail-product/${item._id}`,
-													);
-												}}
-											>
-												<Meta
-													title={item?.productName}
-													description={
-														item?.description
-													}
-												/>
-											</Card>
-										</Col>
-									)
-								);
-							})}
-					</Row>
-				</div>
-				<div className="feature-style">
-					<div className="feature-style-title">Featured styles</div>
-					<Row>
-						<Col span={12}>
-							<Card
-								className="feature-style-item"
-								hoverable
-								cover={
-									<img
-										alt="example"
-										src="https://assets.adidas.com/images/w_276,h_276,f_auto,q_auto,fl_lossy,c_fill,g_auto/b9bd6dc6bbb84a8faa3dae8400320b3e_9366/GX6632_01_standard.jpg"
-									/>
-								}
-							>
-								<Meta
-									title="Europe Street beat"
-									description="www.instagram.com"
-								/>
-							</Card>
-						</Col>
-						<Col span={12}>
-							<Card
-								className="feature-style-item"
-								hoverable
-								cover={
-									<img
-										alt="example"
-										src="https://assets.adidas.com/images/w_276,h_276,f_auto,q_auto,fl_lossy,c_fill,g_auto/e01dea68cf93434bae5aac0900af99e8_9366/FX5500_01_standard.jpg"
-									/>
-								}
-							>
-								<Meta
-									title="Europe Street beat"
-									description="www.instagram.com"
-								/>
-							</Card>
-						</Col>
 					</Row>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };

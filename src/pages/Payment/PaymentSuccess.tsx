@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 import { orderApi } from "../../api/OrderApi";
 import { cartApi } from "../../api/cartApi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "antd";
 
 export const PaymentSuccess = (): React.ReactElement => {
 	const user = JSON.parse(localStorage.getItem("user") || "{}");
 	const email = user.email;
 	const params = useParams();
-
+	const navigate = useNavigate();
 	useEffect(() => {
 		handleEditOrder();
 	}, []);
@@ -47,10 +48,21 @@ export const PaymentSuccess = (): React.ReactElement => {
 				height: "100%",
 				display: "flex",
 				justifyContent: "center",
+				flexDirection: "column",
 				alignItems: "center",
+				marginTop: 40,
+				color: "green",
+				fontSize: "32px",
 			}}
 		>
 			<h1>Thanh toán thành công</h1>
+			<Button
+				style={{ marginTop: 40, width: 200, height: 40 }}
+				type="primary"
+				onClick={() => navigate("/")}
+			>
+				Quay lại trang chủ
+			</Button>
 		</div>
 	);
 };

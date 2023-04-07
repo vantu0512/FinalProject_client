@@ -4,4 +4,5 @@ export const CONSTANT = {
 	DEFAULT_PAGE: "1",
 	DEFAULT_SIZE: "8",
 	DEFAULT_KEYWORD: "",
+	DEFAULT_FILTER: "",
 };

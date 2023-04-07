@@ -34,11 +34,10 @@ export const SignUp = (): React.ReactElement => {
 				localStorage.setItem("user", JSON.stringify(data));
 				if (data.role === "user") navigate("/");
 				if (data.role === "admin") navigate("/manage-account");
-			} else {
-				toast.error(res?.data?.errMessage);
 			}
-		} catch (e) {
+		} catch (e: any) {
 			console.log(e);
+			toast.error(e?.response?.data?.errMessage);
 		}
 	};
 

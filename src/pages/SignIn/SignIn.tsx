@@ -5,9 +5,12 @@ import loginIcon from "../../asset/image/login.png";
 import { userApi } from "../../api/userApi";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-
+import { AppDispatch } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { commonAction } from "../../store/action/commonAction";
 export const SignIn = (): React.ReactElement => {
 	const [loginForm] = Form.useForm();
+	const dispatch: AppDispatch = useDispatch();
 	const navigate = useNavigate();
 	const user = JSON.parse(localStorage.getItem("user") || "{}");
 	const role = user.role;
@@ -28,17 +31,26 @@ export const SignIn = (): React.ReactElement => {
 					email: res.data.email,
 					role: res.data.role,
 					fullName: res.data.fullName,
+					avatar: res.data.avatar,
 					accessToken: res.data.accessToken,
 					refreshToken: res.data.refreshToken,
 				};
 				localStorage.setItem("user", JSON.stringify(data));
+				dispatch(
+					commonAction.changeUserInfor({
+						fullName: data.fullName,
+						avatar: data.avatar,
+					}),
+				);
 				if (data.role === "user") navigate("/");
-				if (data.role === "admin") navigate("/manage-account");
-			} else {
-				toast.error(res?.data?.errMessage);
+				if (data.role === "admin")
+					setTimeout(() => {
+						navigate("/manage-account");
+					}, 1000);
 			}
-		} catch (e) {
+		} catch (e: any) {
 			console.log(e);
+			toast.error(e?.response?.data?.errMessage);
 		}
 	};
 

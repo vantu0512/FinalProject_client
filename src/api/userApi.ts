@@ -13,4 +13,5 @@ export const userApi = {
 	getDetailUser: (params: any) =>
 		axiosConfig.get("/get-detail-user", { params }),
 	blockUser: (body: any) => axiosConfig.post("/block-user", body),
+	changePassword: (body: any) => axiosConfig.post("/change-password", body),
 };
