@@ -46,7 +46,7 @@ export const SignIn = (): React.ReactElement => {
 				if (data.role === "admin")
 					setTimeout(() => {
 						navigate("/manage-account");
-					}, 1000);
+					}, 1);
 			}
 		} catch (e: any) {
 			console.log(e);

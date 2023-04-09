@@ -15,12 +15,12 @@ export const FilterComponent = (): React.ReactElement => {
 	const size = searchParams.get("size") || CONSTANT.DEFAULT_SIZE;
 	const keyword = searchParams.get("keyword") || CONSTANT.DEFAULT_KEYWORD;
 
-	const optionsPrice = [
-		{ label: "100$", value: 100 },
-		{ label: "120$", value: 120 },
-		{ label: "200$", value: 200 },
-	];
-
+	const [optionsPrice, setOptionsPrice] = useState<any>([
+		{ key: 0, minPrice: 0, maxPrice: 50, isChecked: false },
+		{ key: 1, minPrice: 50, maxPrice: 100, isChecked: false },
+		{ key: 2, minPrice: 100, maxPrice: 200, isChecked: false },
+		{ key: 3, minPrice: 200, maxPrice: 1000, isChecked: false },
+	]);
 	useEffect(() => {
 		handleGetAllCategory({
 			page,
@@ -30,7 +30,30 @@ export const FilterComponent = (): React.ReactElement => {
 	}, []);
 
 	const timeOut: any = useRef();
-	const onChange = (checkedValues: CheckboxValueType[]) => {
+	const handleCheckBoxPrice = (item: any) => {
+		let temp = false;
+		if (timeOut.current) clearTimeout(timeOut.current);
+		const arr: any = optionsPrice.map((option: any) => {
+			if (item.key === option.key) {
+				temp = !item.isChecked;
+				return {
+					...option,
+					isChecked: !item.isChecked,
+				};
+			} else return { ...option, isChecked: false };
+		});
+		setOptionsPrice([...arr]);
+		timeOut.current = setTimeout(() => {
+			const sort: any = {
+				minPrice: item.minPrice,
+				maxPrice: item.maxPrice,
+			};
+			searchParams.set("sort", temp ? JSON.stringify(sort) : "");
+			setSearchParams(searchParams);
+		}, 1000);
+	};
+
+	const onChangeCheckBoxCategory = (checkedValues: CheckboxValueType[]) => {
 		if (timeOut.current) clearTimeout(timeOut.current);
 		timeOut.current = setTimeout(() => {
 			searchParams.set("filter", checkedValues.toString());
@@ -68,18 +91,28 @@ export const FilterComponent = (): React.ReactElement => {
 				<Checkbox.Group
 					style={{ display: "flex", flexDirection: "column" }}
 					options={optionsCategory}
-					defaultValue={["Pear"]}
-					onChange={onChange}
+					onChange={onChangeCheckBoxCategory}
 				/>
 			</div>
 			<div className="filter-price">
 				<span className="price">Price</span>
-				<Checkbox.Group
-					style={{ display: "flex", flexDirection: "column" }}
-					options={optionsPrice}
-					defaultValue={[100]}
-					onChange={onChange}
-				/>
+				{optionsPrice &&
+					optionsPrice.map((item: any) => {
+						return (
+							<Checkbox
+								key={item?.key}
+								style={{
+									display: "flex",
+									flexDirection: "column",
+								}}
+								value={JSON.stringify(item)}
+								onClick={() => handleCheckBoxPrice(item)}
+								checked={item?.isChecked}
+							>
+								{`${item?.minPrice} $ - ${item?.maxPrice}$`}
+							</Checkbox>
+						);
+					})}
 			</div>
 		</div>
 	);

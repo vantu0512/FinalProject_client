@@ -3,4 +3,5 @@ export type SearchParams = {
 	size?: string;
 	keyword?: string;
 	filter?: string;
+	sortPrice?: string;
 };

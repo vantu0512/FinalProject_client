@@ -16,6 +16,7 @@ export const Product = (): React.ReactElement => {
 	const size = searchParams.get("size") || CONSTANT.DEFAULT_SIZE;
 	const keyword = searchParams.get("keyword") || CONSTANT.DEFAULT_KEYWORD;
 	const filter = searchParams.get("filter") || CONSTANT.DEFAULT_FILTER;
+	const sortPrice = searchParams.get("sort") || CONSTANT.DEFAULT_SORT_PRICE;
 
 	useEffect(() => {
 		handleGetAllProduct({
@@ -23,8 +24,9 @@ export const Product = (): React.ReactElement => {
 			size,
 			keyword,
 			filter,
+			sortPrice,
 		});
-	}, [page, size, keyword, filter]);
+	}, [page, size, keyword, filter, sortPrice]);
 
 	const handleGetAllProduct = async (params: SearchParams): Promise<any> => {
 		try {

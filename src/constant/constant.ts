@@ -5,4 +5,5 @@ export const CONSTANT = {
 	DEFAULT_SIZE: "8",
 	DEFAULT_KEYWORD: "",
 	DEFAULT_FILTER: "",
+	DEFAULT_SORT_PRICE: "",
 };
