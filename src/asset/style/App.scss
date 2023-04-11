@@ -43,6 +43,10 @@
 				display: flex;
 				flex-direction: column;
 				color: white;
+				label{
+					width: 180px;
+					overflow-x: hidden;
+				}
 			}
 		}
 		.logout-icon {

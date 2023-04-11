@@ -88,7 +88,9 @@ export const DetailProduct = (): React.ReactElement => {
 							style={{ width: "100%", height: 40, marginTop: 80 }}
 							onClick={() => {
 								handleAddToCart();
-								navigate("/product");
+								email
+									? navigate("/product")
+									: navigate("/sign-in");
 							}}
 						>
 							Thêm vào giỏ hàng

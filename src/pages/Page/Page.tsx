@@ -1,5 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import "../../asset/style/Page.scss";
 export const Page = (): React.ReactElement => {
+	const navigate = useNavigate();
 	return (
 		<div className="about-us-page">
 			<div className="page-header">
@@ -7,7 +9,12 @@ export const Page = (): React.ReactElement => {
 				<div className="page-header-content">
 					<h1>BECOME A MEMBER</h1>
 					<span>Sign up for free. Join the community.</span>
-					<div className="join-us">Join Us</div>
+					<div
+						className="join-us"
+						onClick={() => navigate("/sign-up")}
+					>
+						Join Us
+					</div>
 				</div>
 			</div>
 			<div className="feature-benefit">
@@ -102,7 +109,12 @@ export const Page = (): React.ReactElement => {
 				<div className="page-header-content">
 					<h1>THANK FOR BEING HERE</h1>
 					<span>Your global community awaits.</span>
-					<div className="join-us">Join Us</div>
+					<div
+						className="join-us"
+						onClick={() => navigate("/sign-up")}
+					>
+						Join Us
+					</div>
 				</div>
 			</div>
 		</div>
