@@ -23,6 +23,8 @@ export const ManageProduct = (): React.ReactElement => {
 	const page = searchParams.get("page") || CONSTANT.DEFAULT_PAGE;
 	const size = searchParams.get("size") || CONSTANT.DEFAULT_SIZE;
 	const keyword = searchParams.get("keyword") || CONSTANT.DEFAULT_KEYWORD;
+	const [totalRecord, setTotalRecord] = useState<number>();
+
 	const columns: ColumnsType<ProductType> = [
 		{
 			title: "Tên sản phẩm",
@@ -110,6 +112,7 @@ export const ManageProduct = (): React.ReactElement => {
 			if (res?.data?.listProduct) {
 				const arr = handleFormatData(res.data.listProduct);
 				setData(arr);
+				setTotalRecord(res.data?.totalRecord);
 			}
 		} catch (error) {
 			console.log(error);
@@ -195,7 +198,9 @@ export const ManageProduct = (): React.ReactElement => {
 					/>
 				</div>
 				<div className="table-pagination">
-					<PaginationComponent />
+					<PaginationComponent
+						totalRecord={totalRecord ? totalRecord : Number(size)}
+					/>
 				</div>
 			</div>
 			{isOpenModal && (

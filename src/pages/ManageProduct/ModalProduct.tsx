@@ -132,8 +132,10 @@ export const ModalProduct = ({
 				imgUrl: `${imgUrl}`,
 			};
 
-			if (typeModal === "add") await productApi.add(data);
-			else {
+			if (typeModal === "add") {
+				const res = await productApi.add(data);
+				if (res?.data) toast.success(res.data.errMessage);
+			} else {
 				data._id = dataToModal._id;
 				const res = await productApi.update(data);
 				if (res?.data) toast.success(res.data.errMessage);

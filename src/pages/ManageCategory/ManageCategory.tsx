@@ -22,6 +22,7 @@ export const ManageCategory = (): React.ReactElement => {
 	const page = searchParams.get("page") || CONSTANT.DEFAULT_PAGE;
 	const size = searchParams.get("size") || CONSTANT.DEFAULT_SIZE;
 	const keyword = searchParams.get("keyword") || CONSTANT.DEFAULT_KEYWORD;
+	const [totalRecord, setTotalRecord] = useState<number>();
 	const columns: ColumnsType<CategoryType> = [
 		{
 			title: "Mã danh mục",
@@ -87,6 +88,7 @@ export const ManageCategory = (): React.ReactElement => {
 			if (res?.data?.listCategory) {
 				const arr = handleFormatData(res.data.listCategory);
 				setData(arr);
+				setTotalRecord(res.data?.totalRecord);
 			}
 		} catch (error) {
 			console.log(error);
@@ -155,7 +157,7 @@ export const ManageCategory = (): React.ReactElement => {
 						setTypeModal("add");
 					}}
 				>
-					Thêm danh mục
+					Add category
 				</Button>
 			</div>
 			<div className="manage-account-table">
@@ -167,7 +169,9 @@ export const ManageCategory = (): React.ReactElement => {
 					/>
 				</div>
 				<div className="table-pagination">
-					<PaginationComponent />
+					<PaginationComponent
+						totalRecord={totalRecord ? totalRecord : Number(size)}
+					/>
 				</div>
 			</div>
 			{isOpenModal && (

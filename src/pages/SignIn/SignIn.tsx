@@ -48,6 +48,7 @@ export const SignIn = (): React.ReactElement => {
 						navigate("/manage-account");
 					}, 1);
 			}
+			if (res?.data.errCode === 1) toast.error(res.data.errMessage);
 		} catch (e: any) {
 			console.log(e);
 			toast.error(e?.response?.data?.errMessage);

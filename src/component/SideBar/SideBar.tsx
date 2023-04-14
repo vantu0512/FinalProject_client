@@ -30,7 +30,6 @@ const items: any = [
 	getItem("Quản lý danh mục sản phẩm", "3", <ProfileOutlined />),
 	getItem("Quản lý đơn hàng", "4", <PayCircleOutlined />),
 	getItem("Quản lý tin tức", "5", <FundOutlined />),
-	getItem("Quản lý trang", "6", <ProfileOutlined />),
 ];
 
 type ArrTabsType = {
@@ -57,18 +56,13 @@ const arrTabs: ArrTabsType[] = [
 	},
 	{
 		key: 4,
-		tabName: "Quản lý nhà cung cấp",
+		tabName: "Quản lý đơn hàng",
 		url: "/manage-order",
 	},
 	{
 		key: 5,
-		tabName: "Quản lý sản phẩm",
+		tabName: "Quản lý tin tức",
 		url: "/manage-news",
-	},
-	{
-		key: 6,
-		tabName: "Quản lý trang",
-		url: "/manage-page",
 	},
 ];
 

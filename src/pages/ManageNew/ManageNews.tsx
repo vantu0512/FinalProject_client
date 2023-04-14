@@ -22,6 +22,8 @@ export const ManageNews = (): React.ReactElement => {
 	const page = searchParams.get("page") || CONSTANT.DEFAULT_PAGE;
 	const size = searchParams.get("size") || CONSTANT.DEFAULT_SIZE;
 	const keyword = searchParams.get("keyword") || CONSTANT.DEFAULT_KEYWORD;
+	const [totalRecord, setTotalRecord] = useState<number>();
+
 	const columns: ColumnsType<NewsType> = [
 		{
 			title: "Tên tin tức",
@@ -98,6 +100,7 @@ export const ManageNews = (): React.ReactElement => {
 			if (res?.data?.data) {
 				const arr = handleFormatData(res.data.data);
 				setData(arr);
+				setTotalRecord(res.data?.totalRecord);
 			}
 		} catch (error) {
 			console.log(error);
@@ -169,7 +172,7 @@ export const ManageNews = (): React.ReactElement => {
 						setTypeModal("add");
 					}}
 				>
-					Thêm tin tức
+					Add news
 				</Button>
 			</div>
 			<div className="manage-account-table">
@@ -181,7 +184,9 @@ export const ManageNews = (): React.ReactElement => {
 					/>
 				</div>
 				<div className="table-pagination">
-					<PaginationComponent />
+					<PaginationComponent
+						totalRecord={totalRecord ? totalRecord : Number(size)}
+					/>
 				</div>
 			</div>
 			{isOpenModal && (
