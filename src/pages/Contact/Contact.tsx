@@ -1,15 +1,35 @@
-import { Button, Form, Input } from "antd";
 import "../../asset/style/Contact.scss";
+import emailjs from "@emailjs/browser";
 import {
 	MailOutlined,
 	InstagramOutlined,
 	FacebookOutlined,
 } from "@ant-design/icons";
-import TextArea from "antd/es/input/TextArea";
+import { useRef } from "react";
+import { toast } from "react-toastify";
 export const Contact = (): React.ReactElement => {
-	const [form] = Form.useForm();
-	const onFinish = (values: any) => {
-		console.log("Success:", values);
+	const form1: any = useRef();
+
+	const sendEmail = (e: any) => {
+		e.preventDefault();
+		console.log("hjhj", form1.current);
+
+		emailjs
+			.sendForm(
+				"service_2qir8fl",
+				"template_rnqykgu",
+				form1.current,
+				"QrRRO0bb5sqsoQ_Ut",
+			)
+			.then(
+				(result) => {
+					console.log(result.text);
+					toast.success("Liên hệ thành công!");
+				},
+				(error) => {
+					console.log(error.text);
+				},
+			);
 	};
 	return (
 		<div className="contact">
@@ -38,66 +58,21 @@ export const Contact = (): React.ReactElement => {
 				</div>
 				<div className="contact-right">
 					<div className="form-contact">
-						<Form
-							form={form}
-							id="form-contact"
-							name="basic"
-							labelCol={{ span: 8 }}
-							wrapperCol={{ span: 16 }}
-							style={{ maxWidth: 600 }}
-							initialValues={{ remember: true }}
-							onFinish={onFinish}
-							autoComplete="off"
-						>
-							<Form.Item
-								name="email"
-								rules={[
-									{
-										required: true,
-										message: "Please input your email!",
-									},
-									{
-										type: "email",
-										message: "Email is not correct!",
-									},
-								]}
-							>
-								<Input placeholder="Your email" />
-							</Form.Item>
-
-							<Form.Item
-								name="fullName"
-								rules={[
-									{
-										required: true,
-										message: "Please input your full name!",
-									},
-								]}
-							>
-								<Input placeholder="Full name" />
-							</Form.Item>
-
-							<Form.Item
-								name="reason"
-								rules={[
-									{
-										required: true,
-										message:
-											"Please tell us about your reason!",
-									},
-								]}
-							>
-								<TextArea placeholder="Tell us about your reason?" />
-							</Form.Item>
-
-							<Button
-								type="primary"
-								htmlType="submit"
-								form="form-contact"
-							>
-								Send
-							</Button>
-						</Form>
+						<form ref={form1} onSubmit={sendEmail} className="form">
+							<div className="row">
+								<label>Name</label>
+								<input type="text" name="user_name" />
+							</div>
+							<div className="row">
+								<label>Email</label>
+								<input type="email" name="user_email" />
+							</div>
+							<div className="row">
+								<label>Message</label>
+								<textarea name="message" />
+							</div>
+							<input type="submit" value="Send" className="btn" />
+						</form>
 					</div>
 				</div>
 			</div>
