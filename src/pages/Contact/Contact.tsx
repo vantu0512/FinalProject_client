@@ -12,8 +12,6 @@ export const Contact = (): React.ReactElement => {
 
 	const sendEmail = (e: any) => {
 		e.preventDefault();
-		console.log("hjhj", form1.current);
-
 		emailjs
 			.sendForm(
 				"service_2qir8fl",

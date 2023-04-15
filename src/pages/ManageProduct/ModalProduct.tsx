@@ -83,8 +83,6 @@ export const ModalProduct = ({
 		try {
 			const res = await categoryApi.getAll(params);
 			if (res?.data?.listCategory) {
-				console.log(res.data.listCategory);
-
 				const arr = formatCategory(res.data.listCategory);
 				setOption(arr);
 			}

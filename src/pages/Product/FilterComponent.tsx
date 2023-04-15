@@ -59,7 +59,6 @@ export const FilterComponent = (): React.ReactElement => {
 			searchParams.set("filter", checkedValues.toString());
 			setSearchParams(searchParams);
 		}, 1000);
-		console.log("checked = ", checkedValues);
 	};
 
 	const handleGetAllCategory = async (params: SearchParams): Promise<any> => {
