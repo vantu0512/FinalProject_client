@@ -1,6 +1,5 @@
 import { ManageCategory } from "../pages/ManageCategory/ManageCategory";
 import { Home } from "../pages/Home/Home";
-import { ManageAccessRight } from "../pages/ManageAccessRight/ManageAccessRight";
 import { ManageAccount } from "../pages/ManageAccount/ManageAccount";
 import { ManageOrder } from "../pages/ManageOrder/ManageOrder";
 import { ManageProduct } from "../pages/ManageProduct/ManageProduct";
@@ -22,10 +21,6 @@ export const adminRoute = [
 	{
 		url: "/manage-account",
 		element: <ManageAccount />,
-	},
-	{
-		url: "/manage-accessRight",
-		element: <ManageAccessRight />,
 	},
 	{
 		url: "/manage-product",

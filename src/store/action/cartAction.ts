@@ -19,6 +19,7 @@ const getAllCart = (email: string) => {
 					price: product?.productId?.price,
 					imgUrl: product.productId?.imgUrl,
 					productName: product.productId?.productName,
+					size: product?.size,
 				};
 			});
 			await dispatch({
@@ -47,6 +48,7 @@ const addToCart = (data: CartType) => {
 				) {
 					checkExist = true;
 					product.quantity += data.quantity;
+					product.size = data?.size;
 				}
 			});
 			if (!checkExist) {

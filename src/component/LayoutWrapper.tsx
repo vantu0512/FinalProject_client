@@ -198,7 +198,13 @@ const LayoutWrapper = () => {
 											<Menu
 												theme="light"
 												mode="horizontal"
-												defaultSelectedKeys={["1"]}
+												defaultSelectedKeys={menu.map(
+													(item) =>
+														item.url ==
+														location.pathname
+															? `${item.key}`
+															: "",
+												)}
 												items={menu.map((item) =>
 													item.key < 8 ? item : null,
 												)}

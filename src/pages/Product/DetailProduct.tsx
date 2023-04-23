@@ -8,6 +8,8 @@ import { AppDispatch } from "../../store/store";
 import { useDispatch } from "react-redux";
 import { CartType } from "../../type/type";
 
+const listSizeOption: number[] = [36, 37, 38, 39, 40, 41, 42, 43];
+
 export const DetailProduct = (): React.ReactElement => {
 	const params = useParams();
 	const [detailProduct, setDetailProduct] = useState<any>();
@@ -16,6 +18,7 @@ export const DetailProduct = (): React.ReactElement => {
 	const email = user.email;
 	const dispatch: AppDispatch = useDispatch();
 	const navigate = useNavigate();
+	const [sizeProduct, setSizeProduct] = useState<number>(36);
 
 	useEffect(() => {
 		params?.id && handleGetDetailProduct(params.id);
@@ -46,6 +49,7 @@ export const DetailProduct = (): React.ReactElement => {
 				imgUrl: detailProduct?.imgUrl,
 				price: detailProduct?.price,
 				quantity: quantity,
+				size: sizeProduct,
 			};
 			await dispatch(cartAction.addToCart(data));
 		} catch (e) {
@@ -83,6 +87,25 @@ export const DetailProduct = (): React.ReactElement => {
 						<p className="totalCost">{`Thành tiền: ${
 							detailProduct?.price * quantity
 						} $`}</p>
+						<div className="product-size">
+							<h3 className="size-title">Chọn size giày:</h3>
+							<div className="list-size">
+								{listSizeOption?.map((item) => {
+									return (
+										<div
+											className={
+												item === sizeProduct
+													? "size-item size-item-active"
+													: "size-item"
+											}
+											onClick={() => setSizeProduct(item)}
+										>
+											{item}
+										</div>
+									);
+								})}
+							</div>
+						</div>
 						<Button
 							type="primary"
 							style={{ width: "100%", height: 40, marginTop: 80 }}

@@ -88,7 +88,32 @@ export const Product = (): React.ReactElement => {
 										>
 											<Meta
 												title={item?.productName}
-												description={item?.description}
+												description={
+													<div
+														style={{
+															width: "100%",
+															display: "flex",
+														}}
+													>
+														<span
+															style={{
+																width: "50%",
+															}}
+														>
+															{item?.description}
+														</span>
+														<span
+															style={{
+																width: "50%",
+																color: "red",
+																textAlign:
+																	"right",
+															}}
+														>
+															{`${item?.price}$`}
+														</span>
+													</div>
+												}
 											/>
 										</Card>
 									</Col>

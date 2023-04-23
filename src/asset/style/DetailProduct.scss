@@ -63,4 +63,36 @@
             }
         }
     }
+    .product-size{
+        margin-top: 16px;
+      .size-title{
+        font-size: 18px;
+      }  
+      .list-size{
+        display: flex;
+        margin-top: 16px;
+        .size-item{
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 8px;
+            border: 1px solid gray;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .size-item:hover{
+            border:none;
+            background-color: rgb(130, 248, 130);
+
+            color: white;
+        }
+        .size-item-active{
+            border:none;
+            background-color: rgb(60, 183, 221);
+            color: white;
+        }
+      }
+    }
 }

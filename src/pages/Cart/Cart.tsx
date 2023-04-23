@@ -81,6 +81,7 @@ export const Cart = () => {
 				imgUrl: data?.imgUrl,
 				price: data?.price,
 				quantity: type ? 1 : -1,
+				size: data?.size,
 			};
 			await dispatch(cartAction.addToCart(newData));
 		} catch (e) {
@@ -120,6 +121,7 @@ export const Cart = () => {
 					await handleDeleteAllCart();
 					await handleGetAllCart(email);
 					toast.success(resAddOrder?.data?.errMessage);
+					navigate("/payment-success/1");
 				}
 		} catch (error) {
 			console.log("err:", error);

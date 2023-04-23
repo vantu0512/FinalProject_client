@@ -5,6 +5,7 @@ export type CartType = {
 	price?: number;
 	imgUrl?: string;
 	productName?: string;
+	size?: number;
 };
 
 export type UserType = {
