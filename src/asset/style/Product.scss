@@ -15,6 +15,7 @@
         }
         .category{
             width: 100%;
+            min-height: 768px;
             .category-title{
                 font-size: 24px;
                 margin: 24px 0px;
@@ -26,6 +27,13 @@
                     border-radius: unset;
                 }
             }
+        }
+
+        .product-pagination{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 8px;
         }
     
         .feature-style{

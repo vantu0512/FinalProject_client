@@ -8,6 +8,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { productApi } from "../../api/productApi";
 import { SearchParams } from "../../type/common";
 import { FilterComponent } from "./FilterComponent";
+import { PaginationComponent } from "../../component/Pagination/PaginationComponent";
 export const Product = (): React.ReactElement => {
 	const navigate = useNavigate();
 	const [data, setData] = useState<ProductType[]>([]);
@@ -17,6 +18,7 @@ export const Product = (): React.ReactElement => {
 	const keyword = searchParams.get("keyword") || CONSTANT.DEFAULT_KEYWORD;
 	const filter = searchParams.get("filter") || CONSTANT.DEFAULT_FILTER;
 	const sortPrice = searchParams.get("sort") || CONSTANT.DEFAULT_SORT_PRICE;
+	const [totalRecord, setTotalRecord] = useState<number>();
 
 	useEffect(() => {
 		handleGetAllProduct({
@@ -34,6 +36,7 @@ export const Product = (): React.ReactElement => {
 			if (res?.data?.listProduct) {
 				const arr = handleFormatData(res.data.listProduct);
 				setData(arr);
+				setTotalRecord(res.data?.totalRecord);
 			}
 		} catch (error) {
 			console.log(error);
@@ -87,8 +90,8 @@ export const Product = (): React.ReactElement => {
 											}}
 										>
 											<Meta
-												title={item?.productName}
-												description={
+												// title={item?.productName}
+												title={
 													<div
 														style={{
 															width: "100%",
@@ -100,7 +103,7 @@ export const Product = (): React.ReactElement => {
 																width: "50%",
 															}}
 														>
-															{item?.description}
+															{item?.productName}
 														</span>
 														<span
 															style={{
@@ -120,6 +123,11 @@ export const Product = (): React.ReactElement => {
 								);
 							})}
 					</Row>
+				</div>
+				<div className="product-pagination">
+					<PaginationComponent
+						totalRecord={totalRecord ? totalRecord : Number(size)}
+					/>
 				</div>
 			</div>
 		</div>

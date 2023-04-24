@@ -19,6 +19,12 @@
             img{
                 border-radius: unset;
             }
+            .ant-card-meta{
+                .ant-card-meta-title{
+                    width: 100%;
+                    overflow-x: hidden;
+                }
+            }
         }
     }
 
